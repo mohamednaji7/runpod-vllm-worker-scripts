@@ -21,15 +21,15 @@ def set_LLM_ENV():
 def set_BitsAndBytes_ENV():
     ## Weights Settings
     os.environ["LOAD_FORMAT"] = "bitsandbytes"
-    os.environ["MAX_MODEL_LEN"] = 512
+    os.environ["MAX_MODEL_LEN"] = '512'
     os.environ["QUANTIZATION"] = "bitsandbytes"
-    os.environ["TRUST_REMOTE_CODE"] = True
+    os.environ["TRUST_REMOTE_CODE"] = 'True'
     os.environ["DTYPE"] = "bfloat16"
 
 def set_LoRA_ENV():
     ## LoRA Settings
-    os.environ["ENABLE_LORA"] = True
-    os.environ["MAX_LORA_RANK"] = 64
+    os.environ["ENABLE_LORA"] = 'True'
+    os.environ["MAX_LORA_RANK"] = '64'
 
 
 def before_handler_script():
