@@ -31,6 +31,14 @@ def set_LoRA_ENV():
     os.environ["ENABLE_LORA"] = 'True'
     os.environ["MAX_LORA_RANK"] = '64'
 
+def set_HF_VARs():
+    BASE_PATH = "runpod-volume"
+    os.environ["BASE_PATH"]=f"/{BASE_PATH}" 
+    os.environ["HF_DATASETS_CACHE"]=f"/{BASE_PATH}/huggingface-cache/datasets" 
+    os.environ["HUGGINGFACE_HUB_CACHE"]=f"/{BASE_PATH}/huggingface-cache/hub" 
+    os.environ["HF_HOME"]=f"/{BASE_PATH}/huggingface-cache/hub" 
+    os.environ["HF_HUB_ENABLE_HF_TRANSFER"]=1 
+
 
 def before_handler_script():
 
@@ -40,3 +48,9 @@ def before_handler_script():
     set_LLM_ENV()
     set_BitsAndBytes_ENV()
     # set_LoRA_ENV()
+
+
+
+def before_handler_script_dummy():
+    logging.info("[before_handler_script_dummy]: I will run before the handler")
+
