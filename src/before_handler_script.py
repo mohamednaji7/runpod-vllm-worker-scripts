@@ -36,8 +36,6 @@ def before_handler_script():
 
     logging.info("I will run before the handler")
 
-    copy_scripts_to_src_dir()
-
     # Set the environment variables
     set_LLM_ENV()
     set_BitsAndBytes_ENV()
