@@ -56,20 +56,6 @@ def set_LoRA_ENV():
     os.environ["ENABLE_LORA"] = True
     os.environ["MAX_LORA_RANK"] = 64
 
-def install_package(package):
-    try:
-        subprocess.run(
-            [sys.executable, '-m', "pip", "install", package],
-        )   
-        logging.info(f"Succesfull installed {package}")
-
-    except subprocess.CalledProcessError as e:
-        logging.error(f"Failed to install {package}: {e}")
-        raise
-
-def install_packages(packages):
-    for package in packages:
-        install_package(package)
 
 def before_handler_script():
 
@@ -81,12 +67,3 @@ def before_handler_script():
     set_LLM_ENV()
     set_BitsAndBytes_ENV()
     # set_LoRA_ENV()
-        
-    # Packages to install
-    packages = [
-        "typing-extensions>=4.8.0",
-        "bitsandbytes>=0.45.0"  
-    ]
-    install_packages(packages)
-
-
