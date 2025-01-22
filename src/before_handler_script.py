@@ -11,9 +11,7 @@ logging.basicConfig(
     datefmt='%Y-%m-%d %H:%M:%S'
 )
 
-
-def before_handler_script():
-    print("I will run before the handler")
+def copy_scripts_to_src_dir():
     SCRIPT_REPO_DIR = "./before_handler_script_repo"
     SCRIPT_SRC_DIR = f"{SCRIPT_REPO_DIR}/src"
     LOCAL_SCRIPT_DIR = f"{os.getcwd()}/"
@@ -34,5 +32,12 @@ def before_handler_script():
             if not os.path.exists(os.path.dirname(dest_path)):
                 os.makedirs(os.path.dirname(dest_path))
             shutil.copy2(src_path, dest_path)
-
     logging.info("before_handler_script copying completed successfully")
+
+
+def before_handler_script():
+    logging.info("I will run before the handler")
+    copy_scripts_to_src_dir()
+    
+
+
