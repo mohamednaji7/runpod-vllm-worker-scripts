@@ -10,7 +10,7 @@ def run(scriptname):
     print(f"Script {scriptname} executed successfully.")
 
 def main():    
-    scriptname = 'keep_alive.py'
+    scriptname = 'hello_handler.py'
     install_requirements("requirements.txt", verbose=True)
     run(scriptname)
 
