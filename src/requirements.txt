@@ -5,6 +5,7 @@
 # git+https://github.com/runpod/runpod-python.git
 # To learn more, see https://pip.pypa.io/en/stable/reference/requirements-file-format/
 
+rich
 runpod~=1.7.0
 pandas
 numpy
