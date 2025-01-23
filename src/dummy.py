@@ -1,6 +1,10 @@
 import logging
 from dummy_module import dummy_module_fn
 
+# Set logging level to DEBUG to see all messages
+logging.basicConfig(level=logging.DEBUG)
+
+
 def dummy():
     logging.debug("hello RunPod! `dummy` script is here.")
 
