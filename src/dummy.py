@@ -7,6 +7,8 @@ def dummy():
 def main():
     try:
         dummy()
+        dummy_module_fn()
+
     except Exception as e:
         logging.debug(f'ERROR in `dummy.py` {e}')
   
