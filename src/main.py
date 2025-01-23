@@ -17,7 +17,7 @@ def update_run_keep_try(scriptname):
         print("Exiting after first failure.")
 
     # If KEEP_TRY is set to "True", continue retrying
-    while os.getenv('KEEP_TRY') == 'True':
+    while os.getenv('KEEP_TRY') == True:
         print("KEEP_TRY is set. Retrying...")
         try:
             # Perform git pull to update
