@@ -5,8 +5,7 @@ import logging
 
 # Setup logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-
-
+logging.info(f"[keep_try_update_and_run] is here!")
 
 def update():
     try:
