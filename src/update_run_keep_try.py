@@ -13,14 +13,10 @@ def run(scriptname):
     subprocess.run(['python3', scriptname], check=True)
     print(f"Script {scriptname} executed successfully.")
 
-def update_and_run(scriptname):
-    update
-    run(scriptname)
-
-
 def try_update_and_run(scriptname):
     try:
-        update_and_run(scriptname)
+        update()
+        run(scriptname)
     except Exception as e:
         print(f"Error occurred: {e}")
         print("Exiting after first failure.")
