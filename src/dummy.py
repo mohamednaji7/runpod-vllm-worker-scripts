@@ -1,8 +1,12 @@
 import logging
+import sys
 
-# Configure logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-logging.basicConfig(level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')
+# Configure logging to output plain text to stdout
+logging.basicConfig(
+    level=logging.INFO,       # Set the minimum logging level
+    format="%(message)s",     # Text-only format
+    stream=sys.stdout,        # Redirect all logs to stdout
+)
 
 def dummy():
     logging.info("hello RunPod! `dummy` script is here.")
