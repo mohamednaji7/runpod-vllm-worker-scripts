@@ -1,6 +1,7 @@
 # Install rich if needed
 import os
 import subprocess
+import time
 import sys
 import logging
 # Setup logging
@@ -73,6 +74,9 @@ def keep_try_update_and_run(scriptname):
     try_update_and_run(scriptname)
     while os.getenv('KEEP_TRY') == 'True' or os.getenv('KEEP_RUN') == 'True':   
         logging.info(f"KEEP_TRY: {os.getenv('KEEP_TRY')}\nKEEP_RUN: {os.getenv('KEEP_RUN')}")
+        seconds = int(os.getenv('RETRY_SECONDS', 60))
+        logging.info(f"will try in {seconds} seconds...")
+        time.sleep(seconds)
         try_update_and_run(scriptname)
 
 def main():
