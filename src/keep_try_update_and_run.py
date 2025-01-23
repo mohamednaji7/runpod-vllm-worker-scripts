@@ -8,16 +8,21 @@ import logging
 # Configure logging to output plain text to stdout
 
 
-# Ensure logs appear in subprocess output
+# Configure logging to output plain text to stdout
 logging.basicConfig(
-    level=logging.DEBUG,
-    format='%(message)s',
+    level=logging.DEBUG,       # Set the minimum logging level
+    format="%(message)s",     # Text-only format
+    stream=sys.stdout,        # Redirect all logs to stdout
 )
 
-# Flush logs immediately
-logging.getLogger().handlers[0].flush = lambda: sys.stdout.flush()
+logging.debug("1. hello RunPod! `dummy` script is here.")
 
-logging.info(f"[keep_try_update_and_run] is here!")
+# Set logging level to DEBUG to see all messages
+logging.basicConfig(
+    level=logging.DEBUG,
+    )
+logging.debug("2. hello RunPod! `dummy` script is here.")
+
 
 try:
     import rich
