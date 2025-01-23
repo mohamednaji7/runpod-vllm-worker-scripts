@@ -6,26 +6,19 @@ import sys
 import logging
 # Setup logging
 # Configure logging to output plain text to stdout
-print("[keep_try_update_and_run] is here!")
 
-logging.info("[keep_try_update_and_run] is here!")
 
-# Setup logging
-# Configure logging to output plain text to stdout
+# Ensure logs appear in subprocess output
 logging.basicConfig(
-    level=logging.DEBUG,       # Set the minimum logging level
-    format="%(message)s",     # Text-only format
+    level=logging.DEBUG,
+    format='%(message)s',
 )
-logging.info("[keep_try_update_and_run] is here!")
 
-# Setup logging
-# Configure logging to output plain text to stdout
-logging.basicConfig(
-    level=logging.DEBUG,       # Set the minimum logging level
-    format="%(message)s",     # Text-only format
-    stream=sys.stdout,        # Redirect all logs to stdout
-)
-logging.info("[keep_try_update_and_run] is here!")
+# Flush logs immediately
+logging.getLogger().handlers[0].flush = lambda: sys.stdout.flush()
+
+logging.info(f"[keep_try_update_and_run] is here!")
+
 try:
     import rich
 except ImportError:
