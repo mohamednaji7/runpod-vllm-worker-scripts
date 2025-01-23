@@ -23,7 +23,7 @@ from rich.logging import RichHandler
 logging.basicConfig(
     level=logging.DEBUG,
     format="%(message)s",
-    stream=sys.stdout  # Explicitly set output to stdout
+    stream=sys.stdout,  # Explicitly set output to stdout
     handlers=[RichHandler(
         rich_tracebacks=True,  # Enable rich tracebacks
         tracebacks_show_locals=True,  # Show local variables in traceback
