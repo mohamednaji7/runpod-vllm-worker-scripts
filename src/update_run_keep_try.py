@@ -1,8 +1,8 @@
+# Install rich if needed
 import os
 import subprocess
 import sys
 import logging
-
 # Setup logging
 # Configure logging to output plain text to stdout
 logging.basicConfig(
@@ -11,6 +11,30 @@ logging.basicConfig(
     stream=sys.stdout,        # Redirect all logs to stdout
 )
 logging.info(f"[keep_try_update_and_run] is here!")
+try:
+    import rich
+except ImportError:
+    logging.warning("Rich library not found, installing...")
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "rich"])
+import rich
+from rich.logging import RichHandler
+# Configure logging with Rich
+logging.basicConfig(
+    level=logging.DEBUG,
+    format="%(message)s",
+    handlers=[RichHandler(
+        rich_tracebacks=True,  # Enable rich tracebacks
+        tracebacks_show_locals=True,  # Show local variables in traceback
+        show_time=True,  # Show timestamp
+        stream=sys.stdout  # Explicitly set output to stdout
+    )]
+)
+# Example logging usage
+logging.info("This is an info message with Rich formatting")
+logging.debug("Debug information looks more colorful")
+logging.warning("Warnings stand out")
+logging.error("Error messages are highlighted")
+
 
 def update():
     try:
