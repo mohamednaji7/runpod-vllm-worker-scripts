@@ -5,11 +5,11 @@ import sys
 import logging
 # Setup logging
 # Configure logging to output plain text to stdout
-logging.basicConfig(
-    level=logging.DEBUG,       # Set the minimum logging level
-    format="%(message)s",     # Text-only format
-    stream=sys.stdout,        # Redirect all logs to stdout
-)
+# logging.basicConfig(
+#     level=logging.DEBUG,       # Set the minimum logging level
+#     format="%(message)s",     # Text-only format
+#     stream=sys.stdout,        # Redirect all logs to stdout
+# )
 logging.info(f"[keep_try_update_and_run] is here!")
 try:
     import rich
