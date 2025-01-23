@@ -22,12 +22,17 @@ def update():
 def handler(job):
     """ Handler function that will be used to process jobs. """
     if os.getenv('PULL_BEFORE_REQUEST')=='True':
+        logging.info("`handler` is making update.")
         update()
+
+    logging.info("[handler] processing request.")
+
     job_input = job['input']
 
     name = job_input.get('name', 'World')
-
-    return f"Hello, {name}!"
+    output = f"Hello, {name}!"
+    logging.info("[handler] output: {output}.")
+    return 
 
 
 runpod.serverless.start({"handler": handler})
