@@ -1,5 +1,7 @@
     
 import subprocess
+from install import  install_requirements 
+
 
 def run(scriptname):
     # Run the specified script
@@ -9,6 +11,7 @@ def run(scriptname):
 
 def main():    
     scriptname = 'keep_alive.py'
+    install_requirements("requirements.txt", verbose=True)
     run(scriptname)
 
 if __name__ == "__main__":
