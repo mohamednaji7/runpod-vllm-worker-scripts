@@ -15,7 +15,7 @@ try:
     import rich
 except ImportError:
     logging.warning("Rich library not found, installing...")
-    subprocess.check_call([sys.executable, "-m", "pip3", "install", "rich"])
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "rich"])
 import rich
 from rich.logging import RichHandler
 # Configure logging with Rich
