@@ -9,11 +9,13 @@ logging.basicConfig(
     stream=sys.stdout,        # Redirect all logs to stdout
 )
 
+logging.debug("1. hello RunPod! `dummy` script is here.")
 
 # Set logging level to DEBUG to see all messages
 logging.basicConfig(
     level=logging.DEBUG,
     )
+logging.debug("2. hello RunPod! `dummy` script is here.")
 
 def dummy():
     logging.debug("hello RunPod! `dummy` script is here.")
