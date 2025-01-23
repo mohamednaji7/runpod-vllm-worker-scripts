@@ -17,7 +17,7 @@ logging.debug("hello RunPod! 'hello_handler.py' script is here.")
 def update():
     # Perform git pull to update
     subprocess.run(['git', 'pull'], check=True)
-    logging.debug("Git pull successful.")
+    logging.info("Git pull successful.")
 
 def handler(job):
     """ Handler function that will be used to process jobs. """
