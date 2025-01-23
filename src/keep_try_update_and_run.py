@@ -6,6 +6,7 @@ import sys
 import logging
 # Setup logging
 # Configure logging to output plain text to stdout
+# logging.debug("0. hello RunPod! `dummy` script is here.")
 
 
 # Configure logging to output plain text to stdout
@@ -17,11 +18,6 @@ logging.basicConfig(
 
 logging.debug("1. hello RunPod! `dummy` script is here.")
 
-# Set logging level to DEBUG to see all messages
-logging.basicConfig(
-    level=logging.DEBUG,
-    )
-logging.debug("2. hello RunPod! `dummy` script is here.")
 
 
 try:
