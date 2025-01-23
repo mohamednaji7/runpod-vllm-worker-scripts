@@ -1,20 +1,23 @@
 import os
 import subprocess
 import sys
-from rich import print
+
+# Function to install rich if not already installed
+def install_rich():
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "rich"])
+
+# Install rich if needed
+try:
+    import rich
+except ImportError:
+    print("Rich library not found, installing...")
+    install_rich()
+    import rich
+
 from rich.console import Console
 
 # Initialize the rich console for better visual output
 console = Console()
-
-# Import and install rich if necessary
-try:
-    import rich
-except ImportError:
-    console.print("[bold red]Rich library not found, installing...[/bold red]")
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "rich"])
-    import rich
-    console.print("[bold green]Rich library installed successfully![/bold green]")
 
 def update():
     try:
