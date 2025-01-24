@@ -40,6 +40,7 @@ def main():
     # os.system("conda activate unsloth_env")
     # Replace os.system() with subprocess
     try:
+        rich_console.info("Command: subprocess.run(['conda', 'activate', 'unsloth_env'], check=True)")
         subprocess.run(['conda', 'activate', 'unsloth_env'], check=True)
     except subprocess.CalledProcessError as e:
         rich_console.error(f"Failed to activate conda environment: {e}")
