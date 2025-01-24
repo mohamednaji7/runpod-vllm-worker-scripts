@@ -1,73 +1,49 @@
-# Install rich if needed
+from rich_console import Rich_Console
 import os
 import subprocess
 import time
 import sys
-import logging
-# Setup logging
-# Configure logging to output plain text to stdout
-# logging.debug("0. hello RunPod! `dummy` script is here.")
 
-
-# Configure logging to output plain text to stdout
-logging.basicConfig(
-    level=logging.DEBUG,       # Set the minimum logging level
-    format="%(message)s",     # Text-only format
-    stream=sys.stdout,        # Redirect all logs to stdout
-)
-
-logging.debug("1. hello RunPod! `dummy` script is here.")
-
-
+# Create an instance of Rich_Console
+rich_console = Rich_Console()
+rich_console.info("Starting the script.")
+# sys.exit()
 
 try:
     import rich
 except ImportError:
-    logging.warning("Rich library not found, installing...")
+    rich_console.warning("Rich library not found, installing...")
     subprocess.check_call([sys.executable, "-m", "pip", "install", "rich"])
-import rich
-from rich.logging import RichHandler
-# Configure logging with Rich
-logging.basicConfig(
-    level=logging.DEBUG,
-    format="%(message)s",
-    stream=sys.stdout,  # Explicitly set output to stdout
-    handlers=[RichHandler(
-        rich_tracebacks=True,  # Enable rich tracebacks
-        tracebacks_show_locals=True,  # Show local variables in traceback
-        show_time=True,  # Show timestamp
-    )]
-)
-# Example logging usage
-logging.info("This is an info message with Rich formatting")
-logging.debug("Debug information looks more colorful")
-logging.warning("Warnings stand out")
-logging.error("Error messages are highlighted")
+    import rich
 
+# Example usage of rich_console for messages
+rich_console.info("Rich library is successfully imported.")
 
 def update():
     try:
         # Perform git pull to update
         subprocess.run(['git', 'pull'], check=True)
-        logging.info("Git pull successful.")
+        rich_console.info("Git pull successful.")
     except subprocess.CalledProcessError as e:
-        logging.error(f"Git pull failed: {e}")
+        rich_console.error(f"Git pull failed: {e}")
         raise
 
 def run(scriptname):
     try:
         # Run the specified script
-        logging.info(f"Running {scriptname}...")
-        result = subprocess.run(['python3', scriptname], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-        
+        rich_console.info(f"Running {scriptname}...")
+        # result = subprocess.run(['python3', scriptname], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        result = subprocess.run(['python3', scriptname], check=True)
+
         # Log the output
-        logging.info(f"Script {scriptname} executed successfully.")
-        logging.info(result.stdout)  # Log standard output from the script
-        logging.error(result.stderr)  # Log standard error (if any)
-        
+        rich_console.info(f"Script {scriptname} executed successfully.")
+        rich_console.info(result.stdout)  # Log standard output from the script
+        if result.stderr:
+            rich_console.error(result.stderr)  # Log standard error (if any)
+
     except subprocess.CalledProcessError as e:
-        logging.error(f"Error occurred while running {scriptname}: {e}")
-        logging.error(f"{e.stderr}")  # Log the error output
+        rich_console.error(f"Error occurred while running {scriptname}: {e}")
+        rich_console.error(f"{e.stderr}")  # Log the error output
         raise
 
 def try_update_and_run(scriptname):
@@ -75,15 +51,15 @@ def try_update_and_run(scriptname):
         update()
         run(scriptname)
     except Exception as e:
-        logging.error(f"Error occurred: {e}")
-        logging.error("Exiting after first failure.")
+        rich_console.error(f"Error occurred: {e}")
+        rich_console.error("Exiting after first failure.")
 
 def keep_try_update_and_run(scriptname):
     try_update_and_run(scriptname)
-    while os.getenv('KEEP_TRY') == 'True' or os.getenv('KEEP_RUN') == 'True':   
-        logging.info(f"KEEP_TRY: {os.getenv('KEEP_TRY')}\nKEEP_RUN: {os.getenv('KEEP_RUN')}")
+    while os.getenv('KEEP_TRY') == 'True' or os.getenv('KEEP_RUN') == 'True':
+        rich_console.info(f"KEEP_TRY: {os.getenv('KEEP_TRY')}\nKEEP_RUN: {os.getenv('KEEP_RUN')}")
         seconds = int(os.getenv('RETRY_SECONDS', 60))
-        logging.info(f"will try in {seconds} seconds...")
+        rich_console.info(f"Will try again in {seconds} seconds...")
         time.sleep(seconds)
         try_update_and_run(scriptname)
 

@@ -1,17 +1,22 @@
     
 import subprocess
 from install import  install_requirements 
+from rich_console import Rich_Console
+
+# Create an instance of Rich_Console
+rich_console = Rich_Console()
+rich_console.info("Starting the script.")
 
 
 def run(scriptname):
     # Run the specified script
-    print(f"Running {scriptname}...")
+    rich_console.info(f"Running {scriptname}...")
     subprocess.run(['python3', scriptname], check=True)
-    print(f"Script {scriptname} executed successfully.")
+    rich_console.info(f"Script {scriptname} executed successfully.")
 
 def main():    
     scriptname = 'hello_handler.py'
-    install_requirements("requirements.txt", verbose=True)
+    install_requirements(rich_console, requirements_file="requirements.txt", verbose=True)
     run(scriptname)
 
 if __name__ == "__main__":

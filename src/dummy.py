@@ -1,36 +1,21 @@
-import os
-import sys
-from rich.console import Console
 from dummy_module import dummy_module_fn
+from rich_console import Rich_Console
 
-# Check if the terminal is capable of color
-print(f"Terminal capable of color: {sys.stdout.isatty()}")
-
-# Force terminal environment variable for subprocess compatibility
-os.environ['TERM'] = 'xterm-256color'
-
-# Instantiate Console with force_terminal=True to ensure color output
-console = Console(force_terminal=True)
-
-# Print styled text
-console.print("[bold magenta]Hello, world![/bold magenta] [green]Welcome to Rich Console![/green]")
-
-# Example colorized console output
-console.print("[blue]INFO:[/blue] [green]This is an info message with Rich formatting[/green]")
-console.print("[yellow]DEBUG:[/yellow] [bright_yellow]Debug information looks more colorful[/bright_yellow]")
-console.print("[orange]WARNING:[/orange] [yellow]Warnings stand out[/yellow]")
-console.print("[red]ERROR:[/red] [bold red]Error messages are highlighted[/bold red]")
-
+# Create an instance of Rich_Console
+rich_console = Rich_Console()
+rich_console.info("This is an info message.")
+rich_console.warning("This is a warning message.")
+rich_console.error("This is an error message.")
+rich_console.debug("This is a debug message.")
 def dummy():
-    console.print("[cyan]DEBUG:[/cyan] hello RunPod! `dummy` script is here.", style="cyan")
+    rich_console.debug("hello RunPod! `dummy` script is here.")
 
 def main():
     try:
         dummy()
         dummy_module_fn()
-
     except Exception as e:
-        console.print(f"[bold red]ERROR in `dummy.py`[/bold red]: {e}", style="bold red")
+        rich_console.error(f"ERROR in `dummy.py`: {e}")
 
 if __name__ == "__main__":
     main()

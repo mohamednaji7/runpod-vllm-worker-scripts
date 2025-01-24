@@ -1,38 +1,69 @@
-import runpod
-import subprocess
+from rich_console import Rich_Console
 import os
-# If your handler runs inference on a model, load the model here.
-# You will want models to be loaded into memory before starting serverless.
-import logging
-# Setup logging
-logging.basicConfig(
-    level=logging.INFO, 
-    format='%(asctime)s [%(levelname)s] %(message)s',
-    datefmt='%Y-%m-%d %H:%M:%S'
-)
-logging.debug("hello RunPod! 'hello_handler.py' script is here.")
+import subprocess
+import time
+import sys
 
+# Create an instance of Rich_Console
+rich_console = Rich_Console()
+rich_console.info("Starting the script.")
 
+try:
+    import rich
+except ImportError:
+    rich_console.warning("Rich library not found, installing...")
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "rich"])
+    import rich
+
+# Example usage of rich_console for messages
+rich_console.info("Rich library is successfully imported.")
 
 def update():
-    # Perform git pull to update
-    subprocess.run(['git', 'pull'], check=True)
-    logging.info("Git pull successful.")
+    try:
+        # Perform git pull to update
+        subprocess.run(['git', 'pull'], check=True)
+        rich_console.info("Git pull successful.")
+    except subprocess.CalledProcessError as e:
+        rich_console.error(f"Git pull failed: {e}")
+        raise
 
-def handler(job):
-    """ Handler function that will be used to process jobs. """
-    if os.getenv('PULL_BEFORE_REQUEST')=='True':
-        logging.info("`handler` is making update.")
+def run(scriptname):
+    try:
+        # Run the specified script
+        rich_console.info(f"Running {scriptname}...")
+        result = subprocess.run(['python3', scriptname], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+
+        # Log the output
+        rich_console.info(f"Script {scriptname} executed successfully.")
+        rich_console.info(result.stdout)  # Log standard output from the script
+        if result.stderr:
+            rich_console.error(result.stderr)  # Log standard error (if any)
+
+    except subprocess.CalledProcessError as e:
+        rich_console.error(f"Error occurred while running {scriptname}: {e}")
+        rich_console.error(f"{e.stderr}")  # Log the error output
+        raise
+
+def try_update_and_run(scriptname):
+    try:
         update()
+        run(scriptname)
+    except Exception as e:
+        rich_console.error(f"Error occurred: {e}")
+        rich_console.error("Exiting after first failure.")
 
-    logging.info("[handler] processing request.")
+def keep_try_update_and_run(scriptname):
+    try_update_and_run(scriptname)
+    while os.getenv('KEEP_TRY') == 'True' or os.getenv('KEEP_RUN') == 'True':
+        rich_console.info(f"KEEP_TRY: {os.getenv('KEEP_TRY')}\nKEEP_RUN: {os.getenv('KEEP_RUN')}")
+        seconds = int(os.getenv('RETRY_SECONDS', 60))
+        rich_console.info(f"Will try again in {seconds} seconds...")
+        time.sleep(seconds)
+        try_update_and_run(scriptname)
 
-    job_input = job['input']
+def main():
+    scriptname = 'main.py'
+    keep_try_update_and_run(scriptname)
 
-    name = job_input.get('name', 'World')
-    output = f"Hello, {name}!"
-    logging.info("[handler] output: {output}.")
-    return 
-
-
-runpod.serverless.start({"handler": handler})
+if __name__ == "__main__":
+    main()

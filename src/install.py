@@ -1,17 +1,13 @@
-import subprocess
 import sys
+import subprocess
 from pathlib import Path
-from rich.console import Console
-from rich.progress import Progress
 
-# Set up rich console
-console = Console()
-
-def install_requirements(requirements_file="requirements.txt", verbose=False):
+def install_requirements(rich_console, requirements_file="requirements.txt", verbose=False):
     """
     Installs the Python packages listed in the given requirements file.
     
     Args:
+        rich_console (Rich_Console): An instance of Rich_Console for logging.
         requirements_file (str): Path to the requirements.txt file. Default is 'requirements.txt'.
         verbose (bool): If True, enables verbose output during installation.
     """
@@ -19,10 +15,10 @@ def install_requirements(requirements_file="requirements.txt", verbose=False):
 
     # Check if the requirements file exists
     if not req_file_path.is_file():
-        console.print(f"[bold red]Error:[/bold red] {requirements_file} does not exist.")
+        rich_console.error(f"Error: {requirements_file} does not exist.")
         return
 
-    console.print(f"[bold blue]Starting installation from[/bold blue] [yellow]{requirements_file}[/yellow]...")
+    rich_console.info(f"Starting installation from {requirements_file}...")
 
     try:
         # Read the contents of the requirements.txt file
@@ -32,29 +28,20 @@ def install_requirements(requirements_file="requirements.txt", verbose=False):
         # Remove any empty lines or comments
         packages = [pkg.strip() for pkg in packages if pkg.strip() and not pkg.startswith("#")]
 
-        # Display a progress bar during installation
-        with Progress(console=console) as progress:
-            task = progress.add_task("[green]Installing dependencies...", total=len(packages))
+        total_packages = len(packages)
+        rich_console.info(f"Total packages to install: {total_packages}")
 
-            # Prepare the pip install command
-            command = [sys.executable, "-m", "pip", "install", "-r", requirements_file]
-            if verbose:
-                command.append("--verbose")
+        # Run the installation command
+        for package in packages:
+            rich_console.info(f"Installing package: {package}")
+            result = subprocess.run([sys.executable, "-m", "pip", "install", package], text=True, capture_output=not verbose)
+            
+            if result.returncode == 0:
+                rich_console.info(f"Successfully installed: {package}")
+            else:
+                rich_console.error(f"Error installing: {package}\n{result.stderr if not verbose else ''}")
 
-            # Run the installation command
-            for package in packages:
-                console.print(f"[yellow]Installing package:[/yellow] {package}")
-                result = subprocess.run([sys.executable, "-m", "pip", "install", package], text=True, capture_output=not verbose)
-                
-                # Update progress and handle results for each package
-                progress.update(task, advance=1)
-                
-                if result.returncode == 0:
-                    console.print(f"[bold green]Successfully installed:[/bold green] {package}")
-                else:
-                    console.print(f"[bold red]Error installing:[/bold red] {package}\n{result.stderr if not verbose else ''}")
-
-            console.print("[bold green]All packages installed successfully![/bold green]")
+        rich_console.info("All packages installed successfully!")
 
     except Exception as e:
-        console.print(f"[bold red]An unexpected error occurred:[/bold red] {e}")
+        rich_console.error(f"An unexpected error occurred: {e}")
