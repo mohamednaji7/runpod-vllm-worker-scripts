@@ -27,7 +27,7 @@ echo "Environment created and activated successfully:"
 conda info --envs
 
 echo "Done! You can now use Conda and your environment."
-
-
 echo "Done! You can now use Conda and Unsloth."
+
+python 
 
