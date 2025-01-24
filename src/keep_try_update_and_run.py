@@ -29,7 +29,6 @@ def try_update_and_run(scriptname):
         # Perform git pull to update
         res = subprocess.run(['git', 'pull'], check=True)
         rich_console.info(res)
-        rich_console.info("Git pull successful.")
 
         rich_console.info(f"Running `{scriptname}`...")
         # Run the specified script
@@ -37,10 +36,9 @@ def try_update_and_run(scriptname):
 
         # Log the output
         rich_console.info(result)
-        rich_console.info(f"Executed successfully.")
     except Exception as e:
         rich_console.error(f"Error occurred: {e}")
-        rich_console.error("Exiting after first failure.")
+        rich_console.error("Exiting after failure.")
 
 def keep_try_update_and_run(scriptname):
     try_update_and_run(scriptname)
