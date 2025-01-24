@@ -1,5 +1,4 @@
 import os
-from pathlib import Path
 import subprocess
 
 if os.environ.get('SCRIPT_NAME') is not None:
@@ -16,10 +15,10 @@ else:
     rich_console = Rich_Console()
 
 def main():
-    # Define the path to the marker file
-    marker_file = Path.home() / ".setup_completed"
+    # Check the environment variable to see if setup is completed (if it exists, treat it as True, otherwise False)
+    setup_completed = os.environ.get('SETUP_COMPLETED', 'False') == 'True'
 
-    if marker_file.exists():
+    if setup_completed:
         rich_console.info("Setup already completed. Skipping setup.sh.")
     else:
         rich_console.info("Running setup.sh for the first time...")
@@ -29,8 +28,8 @@ def main():
 
             subprocess.run(['bash', 'setup.sh'], check=True)
             
-            # Create the marker file to indicate successful setup
-            marker_file.touch()
+            # Set the environment variable to indicate successful setup (as True)
+            os.environ['SETUP_COMPLETED'] = 'True'
             rich_console.info("Setup completed successfully.")
         except subprocess.CalledProcessError as e:
             rich_console.error(f"Error during setup: {e}")
