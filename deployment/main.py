@@ -1,6 +1,6 @@
 import os
+from pathlib import Path
 import subprocess
-import sys
 
 if os.environ.get('SCRIPT_NAME') is not None:
     import logging
