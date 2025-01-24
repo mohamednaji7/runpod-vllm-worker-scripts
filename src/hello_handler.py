@@ -1,22 +1,17 @@
-from rich_console import Rich_Console
-import os
 import subprocess
 import time
-import sys
 
-# Create an instance of Rich_Console
-rich_console = Rich_Console()
+import os
+
+if os.environ.get('SCRIPT_NAME') is not None:
+    import logging
+    rich_console = logging
+else:
+    from rich_console import Rich_Console
+    rich_console = Rich_Console()
+
 rich_console.info("Starting the script.")
 
-try:
-    import rich
-except ImportError:
-    rich_console.warning("Rich library not found, installing...")
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "rich"])
-    import rich
-
-# Example usage of rich_console for messages
-rich_console.info("Rich library is successfully imported.")
 
 def update():
     try:

@@ -1,4 +1,5 @@
 from rich.console import Console
+import logging
 
 class Rich_Console:
     def __init__(self):

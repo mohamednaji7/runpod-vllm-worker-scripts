@@ -1,11 +1,15 @@
     
 import subprocess
-from rich_console import Rich_Console
+import os
 
-# Create an instance of Rich_Console
-rich_console = Rich_Console()
+if os.environ.get('SCRIPT_NAME') is not None:
+    import logging
+    rich_console = logging
+else:
+    from rich_console import Rich_Console
+    rich_console = Rich_Console()
+
 rich_console.info("Starting the script.")
-
 
 def run(scriptname):
     # Run the specified script
