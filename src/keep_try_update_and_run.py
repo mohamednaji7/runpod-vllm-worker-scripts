@@ -38,7 +38,6 @@ def try_update_and_run(scriptname):
         rich_console.info(result)
     except Exception as e:
         rich_console.error(f"Error occurred: {e}")
-        rich_console.error("Exiting after failure.")
 
 def keep_try_update_and_run(scriptname):
     try_update_and_run(scriptname)
