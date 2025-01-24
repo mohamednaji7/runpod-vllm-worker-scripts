@@ -35,76 +35,15 @@ def main():
         except subprocess.CalledProcessError as e:
             rich_console.error(f"Error during setup: {e}")
 
-    # Change conda environment
-    # Initialize conda and activate environment, then run handler.py in one subprocess
-        # Chain the commands: initialize conda, activate the environment, and run the script
-    rich_console.info("Activating unsloth_env...")
     try:
-        scriptname = 'handler.py'
-        command = (
-            '/root/miniconda3/bin/conda init bash && '
-            '/root/miniconda3/bin/conda activate unsloth_env'
-            # f'python3 {scriptname}'
-        )
-
-        # subprocess.run(['/root/miniconda3/bin/conda', 'activate', 'unsloth_env'], check=True)
-
-        rich_console.info(f"Running commands: {command}")
-        # Execute the command in one subprocess
-        result = subprocess.run(command, shell=True, check=True)
-        rich_console.info("Environment activated and handler.py executed successfully")
-        rich_console.info(result)
-
-    except subprocess.CalledProcessError as e:
-        rich_console.error(f"An error occurred: {e}")
-        
-
-        # rich_console.info('Command: os.system("conda activate unsloth_env")')
-        # os.system("conda activate unsloth_env") # made ERROR
-
-        # rich_console.info("Command: ['conda', 'activate', 'unsloth_env']")
-        # subprocess.run(['conda', 'activate', 'unsloth_env'], check=True) # made ERROR
-
-        # Add conda initialization before activation
-        # rich_console.info("Command: ['source', '~/miniconda3/etc/profile.d/conda.sh']")
-        # subprocess.run(['source', '~/miniconda3/etc/profile.d/conda.sh'], shell=True, check=True) # made ERROR
-    # Initialize conda
-    # try:
-    #     rich_console.info("['/root/miniconda3/bin/conda', 'init', 'bash']")
-    #     subprocess.run(['/root/miniconda3/bin/conda', 'init', 'bash'], check=True)
-    #     rich_console.info("Conda initialized successfully")
-        
-    # except subprocess.CalledProcessError as e:
-    #     rich_console.error(f"Failed to initialize conda: {e}")    
-
-    # try:
-    #     rich_console.info("Command: ['/root/miniconda3/bin/conda', 'activate', 'unsloth_env']")
-    #     subprocess.run(['/root/miniconda3/bin/conda', 'activate', 'unsloth_env'], check=True)
-    #     rich_console.info("Env activated successfully")
-
-    # except subprocess.CalledProcessError as e:
-    #     rich_console.error(f"Failed to activate conda environment: {e}")
-
-
-    # # Run handler.py
-    # scriptname = 'handler.py'
-    # rich_console.info(f"Running `{scriptname}`...")
-    # result = subprocess.run(['python3', scriptname], check=True)
-
-    # # Log the output
-    # rich_console.info(result)
-
-
-
-    try:
-        # Run main.sh
-        rich_console.info("Running `main.sh`...")
-        res = subprocess.run(['bash', 'main.sh'], check=True)
-        rich_console.info("main run successfully.")
+        # Run set_env_run_handler.sh
+        rich_console.info("Running `set_env_run_handler.sh`...")
+        res = subprocess.run(['bash', 'set_env_run_handler.sh'], check=True)
+        rich_console.info("set_env_run_handler run successfully.")
         rich_console.info(res)
 
     except subprocess.CalledProcessError as e:
         rich_console.error(f"Error during setup: {e}")
-        
+
 if __name__ == "__main__":
     main()
