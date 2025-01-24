@@ -11,13 +11,11 @@ else:
     rich_console = Rich_Console()
 logging.info("[STARTING] HANDLER.....")
 
-
 import runpod
 
 
 def handler(job):
     """ Handler function that will be used to process jobs. """
-
     logging.info("[Processing] request...")
 
     job_input = job['input']
