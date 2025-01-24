@@ -16,14 +16,11 @@ else:
     rich_console = Rich_Console()
 
 def main():
-    # Git Pull
-    rich_console.info("Running `update` {git, pull}...")
-    res = subprocess.run(['git', 'pull'], check=True)
-    rich_console.info(res)
 
-    # Run setup.sh
-    rich_console.info("Running setup.sh...")
-    subprocess.run(['bash', 'setup.sh'], check=True)
+
+    # # Run setup.sh
+    # rich_console.info("Running setup.sh...")
+    # subprocess.run(['bash', 'setup.sh'], check=True)
 
     # Change conda environment
     rich_console.info("Activating unsloth_env...")
