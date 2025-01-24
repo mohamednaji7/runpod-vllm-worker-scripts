@@ -48,7 +48,7 @@ def main():
     try:
         scriptname = 'handler.py'
         command = (
-            '/root/miniconda3/bin/conda init bash &&'
+            '/root/miniconda3/bin/conda init bash '
             # '/root/miniconda3/bin/conda activate unsloth_env &&'
             # f'python3 {scriptname}'
         )
