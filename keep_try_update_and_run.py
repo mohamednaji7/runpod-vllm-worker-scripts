@@ -1,48 +1,43 @@
 import subprocess
 import time
+import sys
 
 import os
 
 if os.environ.get('SCRIPT_NAME') is not None:
     import logging
+    # Configure logging to output plain text to stdout
+    logging.basicConfig(
+        level=logging.DEBUG,       # Set the minimum logging level
+        format='[%(levelname)s] %(message)s'  # Text-only format
+    )
     rich_console = logging
+
 else:
     from rich_console import Rich_Console
     rich_console = Rich_Console()
 
-rich_console.info("Starting the script.")
 
 
-def update():
-    try:
-        # Perform git pull to update
-        subprocess.run(['git', 'pull'], check=True)
-        rich_console.info("Git pull successful.")
-    except subprocess.CalledProcessError as e:
-        rich_console.error(f"Git pull failed: {e}")
-        raise
 
-def run(scriptname):
-    try:
-        # Run the specified script
-        rich_console.info(f"Running {scriptname}...")
-        result = subprocess.run(['python3', scriptname], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-
-        # Log the output
-        rich_console.info(f"Script {scriptname} executed successfully.")
-        rich_console.info(result.stdout)  # Log standard output from the script
-        if result.stderr:
-            rich_console.error(result.stderr)  # Log standard error (if any)
-
-    except subprocess.CalledProcessError as e:
-        rich_console.error(f"Error occurred while running {scriptname}: {e}")
-        rich_console.error(f"{e.stderr}")  # Log the error output
-        raise
 
 def try_update_and_run(scriptname):
+    rich_console.info(f"Running `try_update_and_run`...")
+
     try:
-        update()
-        run(scriptname)
+        rich_console.info(f"Running `update` {{git, pull}}...")
+        # Perform git pull to update
+        res = subprocess.run(['git', 'pull'], check=True)
+        rich_console.info(res)
+        rich_console.info("Git pull successful.")
+
+        rich_console.info(f"Running `{scriptname}`...")
+        # Run the specified script
+        result = subprocess.run(['python3', scriptname], check=True)
+
+        # Log the output
+        rich_console.info(result)
+        rich_console.info(f"Executed successfully.")
     except Exception as e:
         rich_console.error(f"Error occurred: {e}")
         rich_console.error("Exiting after first failure.")
@@ -57,7 +52,9 @@ def keep_try_update_and_run(scriptname):
         try_update_and_run(scriptname)
 
 def main():
-    scriptname = 'main.py'
+
+    scriptname = 'hello_handler.py'
+    rich_console.info(f"Running `keep_try_update_and_run`...")
     keep_try_update_and_run(scriptname)
 
 if __name__ == "__main__":
