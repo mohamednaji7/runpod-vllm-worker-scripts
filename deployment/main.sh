@@ -29,5 +29,5 @@ conda info --envs
 echo "Done! You can now use Conda and your environment."
 echo "Done! You can now use Conda and Unsloth."
 
-python 
+python3 handler.py
 
