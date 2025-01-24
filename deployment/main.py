@@ -36,9 +36,7 @@ def main():
             rich_console.error(f"Error during setup: {e}")
 
     # Change conda environment
-    rich_console.info("Activating unsloth_env...")
     # Initialize conda and activate environment, then run handler.py in one subprocess
-    try:
         # Chain the commands: initialize conda, activate the environment, and run the script
         # command = (
         #     '/root/miniconda3/bin/conda init bash && '  # Initialize conda
@@ -46,15 +44,15 @@ def main():
         #     'conda activate unsloth_env && '  # Activate the environment
         #     'python3 handler.py'  # Run the handler.py script
         # )
+    rich_console.info("Activating unsloth_env...")
+    try:
         scriptname = 'handler.py'
         command = (
             '/root/miniconda3/bin/conda init bash &&'
-            '/root/miniconda3/bin/conda activate unsloth_env &&'
-            f'python3 {scriptname}'
-
+            # '/root/miniconda3/bin/conda activate unsloth_env &&'
+            # f'python3 {scriptname}'
         )
         rich_console.info(f"Running commands: {command}")
-        
         # Execute the command in one subprocess
         result = subprocess.run(command, shell=True, check=True)
         rich_console.info("Environment activated and handler.py executed successfully")
