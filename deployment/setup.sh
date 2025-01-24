@@ -49,15 +49,15 @@ conda info --envs
 
 echo "Done! You can now use Conda and your environment."
 
-# # Unsloth
-# echo "Let's get Unsloth..."
+# Unsloth
+echo "Let's get Unsloth..."
 
-# conda install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia -y
-# conda install xformers -c xformers -y
+conda install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia -y
+conda install xformers -c xformers -y
 
-# pip install bitsandbytes
-# pip install "unsloth[conda] @ git+https://github.com/unslothai/unsloth.git"
+pip install bitsandbytes
+pip install "unsloth[conda] @ git+https://github.com/unslothai/unsloth.git"
 
-# echo "Done! You can now use Conda and Unsloth."
+echo "Done! You can now use Conda and Unsloth."
 
 source ~/.bashrc
