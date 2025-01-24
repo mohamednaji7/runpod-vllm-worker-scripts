@@ -21,7 +21,7 @@ def handler(job):
     job_input = job['input']
 
     name = job_input.get('name', 'World')
-    output = f"Hello, {name}!"
+    output = f"`handler_hello.py` Hello, {name}!"
     logging.info(f"[handler] output: {output}.")
     return output
 
