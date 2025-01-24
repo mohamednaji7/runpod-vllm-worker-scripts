@@ -37,7 +37,7 @@ def main():
 
     # Change conda environment
     rich_console.info("Activating unsloth_env...")
-    os.system("conda activate unsloth_env")
+    # os.system("conda activate unsloth_env")
     # Replace os.system() with subprocess
     try:
         subprocess.run(['conda', 'activate', 'unsloth_env'], check=True)
