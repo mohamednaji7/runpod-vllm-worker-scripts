@@ -1,8 +1,14 @@
 from dummy_module import dummy_module_fn
-from rich_console import Rich_Console
+import os
 
-# Create an instance of Rich_Console
-rich_console = Rich_Console()
+if os.environ.get('SCRIPT_NAME') is not None:
+    import logging
+    rich_console = logging
+else:
+    from rich_console import Rich_Console
+    rich_console = Rich_Console()
+
+rich_console.info("Starting the script.")
 rich_console.info("This is an info message.")
 rich_console.warning("This is a warning message.")
 rich_console.error("This is an error message.")
