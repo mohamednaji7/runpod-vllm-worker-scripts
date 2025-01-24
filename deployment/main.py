@@ -38,7 +38,6 @@ def main():
     # Change conda environment
     rich_console.info("Activating unsloth_env...")
     
-    try:
         # rich_console.info('Command: os.system("conda activate unsloth_env")')
         # os.system("conda activate unsloth_env")
 
@@ -48,10 +47,20 @@ def main():
         # Add conda initialization before activation
         # rich_console.info("Command: ['source', '~/miniconda3/etc/profile.d/conda.sh']")
         # subprocess.run(['source', '~/miniconda3/etc/profile.d/conda.sh'], shell=True, check=True)
+    # Initialize conda
+    try:
+        rich_console.info("['/root/miniconda3/bin/conda', 'init', 'bash']")
+        subprocess.run(['/root/miniconda3/bin/conda', 'init', 'bash'], check=True)
+        rich_console.info("Conda initialized successfully")
         
+    except subprocess.CalledProcessError as e:
+        rich_console.error(f"Failed to initialize conda: {e}")    
+
+    try:
         rich_console.info("Command: ['/root/miniconda3/bin/conda', 'activate', 'unsloth_env']")
         subprocess.run(['/root/miniconda3/bin/conda', 'activate', 'unsloth_env'], check=True)
-        
+        rich_console.info("Env activated successfully")
+
     except subprocess.CalledProcessError as e:
         rich_console.error(f"Failed to activate conda environment: {e}")
 
