@@ -1,10 +1,10 @@
-apt-get update 
-apt-get install wget
-cd ~
-#!/bin/bash
 
 # Exit on error
 set -e
+
+apt-get update 
+apt-get install wget
+
 
 # Define variables
 CONDA_INSTALLER="Miniconda3-latest-Linux-x86_64.sh"
@@ -36,7 +36,8 @@ source "$CONDA_INSTALL_PATH/etc/profile.d/conda.sh"
 
 # Create an empty Conda environment
 echo "Creating an empty Conda environment: $ENV_NAME..."
-"$CONDA_INSTALL_PATH/bin/conda" create --name "$ENV_NAME" python=3.10 -y
+# "$CONDA_INSTALL_PATH/bin/conda" create --name "$ENV_NAME" python=3.10 -y
+"$CONDA_INSTALL_PATH/bin/conda" create --name "$ENV_NAME" --no-default-packages -y
 
 # Activate the new environment for the current session
 echo "Activating environment: $ENV_NAME..."
@@ -48,15 +49,15 @@ conda info --envs
 
 echo "Done! You can now use Conda and your environment."
 
-# Unsloth
-echo "Let's get Unsloth..."
+# # Unsloth
+# echo "Let's get Unsloth..."
 
-conda install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia -y
-conda install xformers -c xformers -y
+# conda install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia -y
+# conda install xformers -c xformers -y
 
-pip install bitsandbytes
-pip install "unsloth[conda] @ git+https://github.com/unslothai/unsloth.git"
+# pip install bitsandbytes
+# pip install "unsloth[conda] @ git+https://github.com/unslothai/unsloth.git"
 
-echo "Done! You can now use Conda and Unsloth."
+# echo "Done! You can now use Conda and Unsloth."
 
-source ~/.bashrc
+# source ~/.bashrc
