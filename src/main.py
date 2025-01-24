@@ -1,6 +1,5 @@
     
 import subprocess
-from install import  install_requirements 
 from rich_console import Rich_Console
 
 # Create an instance of Rich_Console
@@ -16,7 +15,6 @@ def run(scriptname):
 
 def main():    
     scriptname = 'hello_handler.py'
-    install_requirements(rich_console, requirements_file="requirements.txt", verbose=True)
     run(scriptname)
 
 if __name__ == "__main__":
