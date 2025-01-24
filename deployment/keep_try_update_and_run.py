@@ -43,7 +43,7 @@ def keep_try_update_and_run(scriptname):
     try_update_and_run(scriptname)
     while os.getenv('KEEP_TRY') == 'True' or os.getenv('KEEP_RUN') == 'True':
         rich_console.info(f"KEEP_TRY: {os.getenv('KEEP_TRY')}\nKEEP_RUN: {os.getenv('KEEP_RUN')}")
-        seconds = int(os.getenv('RETRY_SECONDS', 60))
+        seconds = int(os.getenv('RETRY_SECONDS', 30))
         rich_console.info(f"Will try again in {seconds} seconds...")
         time.sleep(seconds)
         try_update_and_run(scriptname)
