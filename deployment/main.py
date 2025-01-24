@@ -58,6 +58,7 @@ def main():
     except subprocess.CalledProcessError as e:
         rich_console.error(f"An error occurred: {e}")
         
+
         # rich_console.info('Command: os.system("conda activate unsloth_env")')
         # os.system("conda activate unsloth_env") # made ERROR
 
@@ -93,5 +94,17 @@ def main():
     # # Log the output
     # rich_console.info(result)
 
+
+
+    try:
+        # Run main.sh
+        rich_console.info("Running `main.sh`...")
+        res = subprocess.run(['bash', 'main.sh'], check=True)
+        rich_console.info("main run successfully.")
+        rich_console.info(res)
+
+    except subprocess.CalledProcessError as e:
+        rich_console.error(f"Error during setup: {e}")
+        
 if __name__ == "__main__":
     main()
