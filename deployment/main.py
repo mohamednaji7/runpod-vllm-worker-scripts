@@ -38,20 +38,17 @@ def main():
     # Change conda environment
     # Initialize conda and activate environment, then run handler.py in one subprocess
         # Chain the commands: initialize conda, activate the environment, and run the script
-        # command = (
-        #     '/root/miniconda3/bin/conda init bash && '  # Initialize conda
-        #     'source /root/miniconda3/etc/profile.d/conda.sh && '  # Source conda initialization
-        #     'conda activate unsloth_env && '  # Activate the environment
-        #     'python3 handler.py'  # Run the handler.py script
-        # )
     rich_console.info("Activating unsloth_env...")
     try:
         scriptname = 'handler.py'
         command = (
-            '/root/miniconda3/bin/conda init bash '
-            # '/root/miniconda3/bin/conda activate unsloth_env &&'
+            '/root/miniconda3/bin/conda init bash &&'
+            '/root/miniconda3/bin/conda activate unsloth_env'
             # f'python3 {scriptname}'
         )
+
+        # subprocess.run(['/root/miniconda3/bin/conda', 'activate', 'unsloth_env'], check=True)
+
         rich_console.info(f"Running commands: {command}")
         # Execute the command in one subprocess
         result = subprocess.run(command, shell=True, check=True)
