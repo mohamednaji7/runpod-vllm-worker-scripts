@@ -50,7 +50,7 @@ def keep_try_update_and_run(scriptname):
 
 def main():
 
-    scriptname = 'handler.py'
+    scriptname = 'main.py'
     rich_console.info(f"Running `keep_try_update_and_run`...")
     keep_try_update_and_run(scriptname)
 
