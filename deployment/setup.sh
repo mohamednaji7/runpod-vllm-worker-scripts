@@ -58,6 +58,10 @@ conda install xformers -c xformers -y
 pip install bitsandbytes
 pip install "unsloth[conda] @ git+https://github.com/unslothai/unsloth.git"
 
-echo "Done! You can now use Conda and Unsloth."
+echo "\nDone! You can now use Conda and Unsloth."
+
+echo "\nLets' install requirments."
+pip install -r requirements.txt
+echo "\nDone! You can now use Conda, Unsloth, and your requirments."
 
 source ~/.bashrc
