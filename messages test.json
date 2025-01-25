@@ -1,0 +1,22 @@
+{
+  "input": {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a helpful assistant that provides concise answers."
+      },
+      {
+        "role": "user",
+        "content": "What's the weather like today?"
+      },
+      {
+        "role": "assistant",
+        "content": "The weather today is sunny with a high of 75°F."
+      },
+      {
+        "role": "user",
+        "content": "Can you tell me a joke?"
+      }
+    ]
+  }
+}

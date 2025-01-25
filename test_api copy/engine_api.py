@@ -167,5 +167,3 @@ class OpenaiEngine(OpenaiResponse):
             # Return error response
             return self.generate_error_response(str(e), error_type="server_error", code="500")
 
-
-
