@@ -1,6 +1,6 @@
 import runpod
 from engine_api import OpenaiEngine
-from model_api import UnslothModel
+from model_api import MockModel
 from openai_routes import OpenAIRoutes
 import os
 
@@ -16,7 +16,7 @@ else:
     rich_console = Rich_Console()
 
 # Initialize the model and engine
-model = UnslothModel()
+model = MockModel()
 engine = OpenaiEngine(model)
 
 # Initialize OpenAI Routes
