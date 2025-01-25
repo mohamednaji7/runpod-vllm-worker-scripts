@@ -22,12 +22,9 @@ source "$CONDA_INSTALL_PATH/etc/profile.d/conda.sh"
 echo "Activating environment: $ENV_NAME..."
 conda activate "$ENV_NAME"
 
-# Verify Conda environment
-echo "Environment created and activated successfully:"
-conda info --envs
 
-echo "Done! You can now use Conda and your environment."
-echo "Done! You can now use Conda and Unsloth."
-
+echo ""
+echo "running `python3 handler.py`..."
+echo ""
 python3 handler.py
 
