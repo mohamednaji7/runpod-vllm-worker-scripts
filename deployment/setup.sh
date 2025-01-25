@@ -36,8 +36,8 @@ source "$CONDA_INSTALL_PATH/etc/profile.d/conda.sh"
 
 # Create an empty Conda environment
 echo "Creating an empty Conda environment: $ENV_NAME..."
-# "$CONDA_INSTALL_PATH/bin/conda" create --name "$ENV_NAME" python=3.10 -y
-"$CONDA_INSTALL_PATH/bin/conda" create --name "$ENV_NAME" --no-default-packages -y
+"$CONDA_INSTALL_PATH/bin/conda" create --name "$ENV_NAME" python=3.10 -y
+# "$CONDA_INSTALL_PATH/bin/conda" create --name "$ENV_NAME" --no-default-packages -y
 
 # Activate the new environment for the current session
 echo "Activating environment: $ENV_NAME..."
