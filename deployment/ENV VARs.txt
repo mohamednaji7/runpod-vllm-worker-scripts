@@ -1,8 +1,0 @@
-REPO_URL
-https://github.com/mohamednaji7/runpod-workers-scripts.git
-REPO_NAME
-runpod-workers-scripts
-SCRIPT_DIR
-src
-SCRIPT_NAME
-keep_try_update_and_run.py
