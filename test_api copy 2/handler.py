@@ -28,7 +28,7 @@ def get_max_concurrency(default=300):
     """Get maximum concurrency from environment variable."""
     return int(os.getenv('MAX_CONCURRENCY', default))
 
-def async_handler(job):
+async def async_handler(job):
     """Asynchronous job handler with comprehensive logging."""
     job_id = job.get('id')
     rich_console.info(f"Processing job: {job_id}")
@@ -57,10 +57,12 @@ def async_handler(job):
     rich_console.info("Job")
     rich_console.info(f"Job >> {str(job)}")
     time.sleep(5)
-    return response
+    yield response
 
 
 # Start RunPod serverless function
 runpod.serverless.start({
-    "handler": async_handler
+    "handler": async_handler, 
+    "concurrency_modifier": get_max_concurrency, 
+    "return_aggregate_stream": True
 })
