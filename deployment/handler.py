@@ -1,22 +1,28 @@
 # handler.py
 import runpod
+from engine_api import OpenaiEngine
+from model_api import UnslothModel
 import os
-import logging
-from engine import UnslothEngine
 
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.StreamHandler(),
-        logging.FileHandler('runpod_handler.log')
-    ]
-)
-logger = logging.getLogger(__name__)
+if os.environ.get('SCRIPT_NAME') is not None:
+    import logging
+    # Configure logging to output plain text to stdout
+    logging.basicConfig(
+        level=logging.DEBUG,       # Set the minimum logging level
+        format='[%(levelname)s] %(message)s'  # Text-only format
+    )
+    rich_console = logging
 
-# Initialize engine
-engine = UnslothEngine()
+else:
+    from rich_console import Rich_Console
+    rich_console = Rich_Console()
+
+
+
+## Initialize the model
+model = UnslothModel()
+## Initialize the engine
+engine = OpenaiEngine(model)
 
 def get_max_concurrency(default=300):
     """Get maximum concurrency from environment variable."""
@@ -25,23 +31,23 @@ def get_max_concurrency(default=300):
 async def async_handler(job):
     """Asynchronous job handler with comprehensive logging."""
     job_id = job.get('id', 'Unknown')
-    logger.info(f"Processing job: {job_id}")
+    rich_console.info(f"Processing job: {job_id}")
     
     try:
         # Extract job input
         job_input = job.get("input", {})
         messages = job_input.get('messages', [])
         
-        logger.info(f"Job {job_id}: Received {len(messages)} messages")
+        rich_console.info(f"Job {job_id}: Received {len(messages)} messages")
         
         # Handle request
-        response = engine.handle_request(messages)
+        response = engine.process_request(messages)
         
-        logger.info(f"Job {job_id}: Processed successfully")
+        rich_console.info(f"Job {job_id}: Processed successfully")
         yield response
     
     except Exception as e:
-        logger.error(f"Job {job_id} failed: {e}", exc_info=True)
+        rich_console.error(f"Job {job_id} failed: {e}", exc_info=True)
         yield {
             "success": False,
             "error": str(e),

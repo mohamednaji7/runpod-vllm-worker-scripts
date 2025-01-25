@@ -1,7 +1,7 @@
-import os
 import subprocess
 from pathlib import Path
 import time 
+import os
 
 if os.environ.get('SCRIPT_NAME') is not None:
     import logging
