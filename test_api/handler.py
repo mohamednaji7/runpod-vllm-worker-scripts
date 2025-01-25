@@ -55,8 +55,8 @@ def async_handler(job):
 
     response = engine.process_job_input(job_input)
     
-    rich_console.info("here is the response >>>")
-    rich_console.info(response)
+    rich_console.debug("here is the response >>>")
+    rich_console.debug(response)
     rich_console.info(f"Job {job_id}: Processed successfully")
 
 
