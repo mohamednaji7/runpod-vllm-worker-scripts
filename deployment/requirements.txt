@@ -8,3 +8,4 @@
 requests
 asyncio
 pathlib
+runpod~=1.7.0
