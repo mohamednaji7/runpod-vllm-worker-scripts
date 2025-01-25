@@ -33,18 +33,20 @@ async def async_handler(job):
     job_id = job.get('id', 'Unknown')
     rich_console.info(f"Processing job: {job_id}")
     
-
-    # Extract job input
-    job_input = job.get("input", {})
-    messages = job_input.get('messages', [])
+    job_id = job.get('id')
+    rich_console.info(f"Processing job: {job_id}")
     
-    rich_console.info(f"Job {job_id}: Received {len(messages)} messages")
+    # Extract job input
+    
     
     # Handle request
-    response = engine.process_request(messages)
+    response = engine.process_job_input(job['input'])
     
     rich_console.info(f"Job {job_id}: Processed successfully")
     yield response
+
+
+
 
 # Start RunPod serverless function
 runpod.serverless.start({

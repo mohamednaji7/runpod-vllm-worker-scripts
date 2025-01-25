@@ -1,7 +1,6 @@
 # model_api.py
 import os
 import time
-from rich.console import Console
 
 # Initialize rich console for logging
 import os
@@ -121,20 +120,36 @@ class OpenaiEngine(OpenaiResponse):
             rich_console.error(f"Error formatting messages: {e}", exc_info=True)
             raise
 
-    def process_request(self, messages):
+    def format_job_input(self, job_input):
+        """Job handler with comprehensive logging."""
+        if 'messages' in job_input:
+            messages = job_input.get('messages')
+            rich_console.info(f"Job: Received {len(messages)} messages")
+            return self.format_messages_to_prompt(messages)
+        elif 'prompt' in job_input:
+            return job_input.get("prompt")
+        else:
+            err_msg = (
+                "job_input must be a list of dictionaries with 'role' and 'content' keys, "
+                "or one dict with a 'prompt' key"
+            )
+            raise ValueError(err_msg)
+
+ 
+    def process_job_input(self, job_input):
         """
         Process a request and return a response in OpenAI-compatible format.
 
         Args:
-            messages (list or str): Messages to process.
+            job_input: job_input to process.
 
         Returns:
             dict: OpenAI-compatible response (success or error).
         """
         try:
             rich_console.info("Processing request")
-            # Convert messages to prompt
-            formatted_prompt = self.format_messages_to_prompt(messages)
+            # Convert job_input to prompt
+            formatted_prompt = self.format_job_input(job_input)
             # Generate response from the model
             response = self.model_api.generate_response(formatted_prompt)
             # Get token usage
@@ -152,27 +167,3 @@ class OpenaiEngine(OpenaiResponse):
             # Return error response
             return self.generate_error_response(str(e), error_type="server_error", code="500")
 
-
-class SimpleOpenaiEngine(OpenaiEngine):
-    def format_messages_to_prompt(self, messages):
-        """
-        Convert messages to a single prompt string.
-        
-        Args:
-            messages (list): List of one dictionary with 'role' and 'content'.
-
-        Returns:
-            str: A formatted prompt string.
-        """
-        try:
-            rich_console.info(f"Formatting {len(messages)} messages into a prompt")
-            if not isinstance(messages, list) or not all(isinstance(msg, dict) for msg in messages):
-                rich_console.debug(messages)
-                raise ValueError("Messages must be a list of dictionaries with 'role' and 'content' keys.")
-            assert len(messages)==1
-            prompt = messages[0]['content']
-            rich_console.debug(f"Formatted prompt: {prompt}")
-            return prompt
-        except Exception as e:
-            rich_console.error(f"Error formatting messages: {e}", exc_info=True)
-            raise
