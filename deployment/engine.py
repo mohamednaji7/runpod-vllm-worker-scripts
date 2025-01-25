@@ -25,15 +25,18 @@ class UnslothModel:
             # Model configuration
             model_dir = "unsloth/tinyllama-bnb-4bit"
             cache_dir = './HF_HOME'
-            max_seq_length = 2**9
 
             # Model initialization with detailed logging
             logger.info(f"Loading model from {model_dir}")
+            dtype = None # None for auto detection. Float16 for Tesla T4, V100, Bfloat16 for Ampere+
+            load_in_4bit = True # Use 4bit quantization to reduce memory usage. Can be False.
+            max_seq_length = 2048 # Choose any! We auto support RoPE Scaling internally!
+
             self.model, self.tokenizer = FastLanguageModel.from_pretrained(
                 model_name=model_dir,
                 max_seq_length=max_seq_length,
-                dtype=torch.float16,
-                load_in_4bit=True,
+                dtype=dtype,
+                load_in_4bit=load_in_4bit,
                 cache_dir=cache_dir,
             )
             
