@@ -30,6 +30,13 @@ def get_max_concurrency(default=300):
 
 def async_handler(job):
     """Asynchronous job handler with comprehensive logging."""
+    # Validate environment variables
+    for env_var in [REPO_URL, REPO_NAME, SCRIPT_DIR, SCRIPT_NAME]:
+        rich_console.info(env_var)
+    rich_console.info("Job")
+    rich_console.info("Job")
+    rich_console.info(f"Job >> {str(job)}")
+    
     job_id = job.get('id')
     rich_console.info(f"Processing job: {job_id}")
     
@@ -50,12 +57,7 @@ def async_handler(job):
     SCRIPT_DIR = os.environ.get('SCRIPT_DIR')
     SCRIPT_NAME = os.environ.get('SCRIPT_NAME')
     
-    # Validate environment variables
-    for env_var in [REPO_URL, REPO_NAME, SCRIPT_DIR, SCRIPT_NAME]:
-        rich_console.info(env_var)
-    rich_console.info("Job")
-    rich_console.info("Job")
-    rich_console.info(f"Job >> {str(job)}")
+
     time.sleep(5)
     return response
 
