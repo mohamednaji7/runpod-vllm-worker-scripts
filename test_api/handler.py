@@ -35,10 +35,10 @@ def async_handler(job):
     
     # Extract job input + Handle request
     # response = engine.process_job_input(job['input'])
-    if 'openai_input' in  input:
-        job_input = job['input']['openai_input']
-    else:
-        job_input = job['input']
+    job_input = job['input']
+    if 'openai_input' in  job_input:
+        job_input = job_input['openai_input']
+
 
     response = engine.process_job_input(job_input)
     
