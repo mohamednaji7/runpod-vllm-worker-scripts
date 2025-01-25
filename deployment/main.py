@@ -35,14 +35,15 @@ def main():
             rich_console.error(f"Error during setup: {e}")
 
     try:
-        # Run set_env_run_handler.sh
-        rich_console.info("Running `set_env_run_handler.sh`...")
-        res = subprocess.run(['bash', 'set_env_run_handler.sh'], check=True)
-        rich_console.info("set_env_run_handler run successfully.")
+        # Run activate_UnslothEnv_run_handler.sh
+        rich_console.info("Running `activate_UnslothEnv_run_handler.sh`...")
+        res = subprocess.run(['bash', 'activate_UnslothEnv_run_handler.sh'], check=True)
+        rich_console.info("activate_UnslothEnv_run_handler run successfully.")
         rich_console.info(res)
 
     except subprocess.CalledProcessError as e:
         rich_console.error(f"Error during setup: {e}")
+        raise
 
 if __name__ == "__main__":
     main()
