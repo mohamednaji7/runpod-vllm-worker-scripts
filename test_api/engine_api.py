@@ -114,7 +114,7 @@ class OpenaiEngine(OpenaiResponse):
                 else:
                     raise ValueError(f"Unsupported role: {role}")
             prompt += "Assistant:"
-            rich_console.debug(f"Formatted prompt: {prompt}")
+            rich_console.info(f"Formatted prompt: {prompt}")
             return prompt
         except Exception as e:
             rich_console.error(f"Error formatting messages: {e}", exc_info=True)
@@ -151,10 +151,10 @@ class OpenaiEngine(OpenaiResponse):
             rich_console.info("Processing request")
             # Convert job_input to prompt
             formatted_prompt = self.format_job_input(job_input)
-            rich_console.debug("Here is the formatted_prompt >> ")
-            rich_console.debug(">> ")
-            rich_console.debug(">> ")
-            rich_console.debug(formatted_prompt)
+            rich_console.info("Here is the formatted_prompt >> ")
+            rich_console.info(">> ")
+            rich_console.info(">> ")
+            rich_console.info(formatted_prompt)
             # Generate response from the model
             response = self.model_api.generate_response(formatted_prompt)
             # Get token usage
