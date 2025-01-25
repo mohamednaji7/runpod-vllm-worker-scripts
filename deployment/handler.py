@@ -68,7 +68,7 @@ async def async_handler(job):
         name = job_input.get('name', 'World 7!')
         output = f"[handler ERR] Hello, {name}!"
         logging.info(f"[handler ERR] output: {output}.")
-        return output
+        yield output
 
 
 runpod.serverless.start({"handler": async_handler, "concurrency_modifier": get_max_concurrency, "return_aggregate_stream": True})
