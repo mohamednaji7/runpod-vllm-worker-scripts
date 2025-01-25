@@ -129,11 +129,12 @@ class OpenaiEngine(OpenaiResponse):
         elif 'prompt' in job_input:
             return job_input.get("prompt")
         else:
-            err_msg = (
-                "job_input must be a list of dictionaries with 'role' and 'content' keys, "
-                "or one dict with a 'prompt' key"
+            raise ValueError(
+                "job_input must be either: "
+                "- a list of dictionaries with 'role' and 'content' keys, e.g., [{'role': 'user', 'content': 'Hello'}], "
+                "or a single dictionary with a 'prompt' key, e.g., {'prompt': 'Hello world'}."
             )
-            raise ValueError(err_msg)
+
 
  
     def process_job_input(self, job_input):

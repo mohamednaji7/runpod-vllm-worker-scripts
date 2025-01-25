@@ -10,7 +10,6 @@ if os.environ.get('SCRIPT_NAME') is not None:
     # Configure logging to output plain text to stdout
     logging.basicConfig(
         level=logging.DEBUG,       # Set the minimum logging level
-        format='[%(levelname)s] %(message)s'  # Text-only format
     )
     rich_console = logging
 
@@ -35,7 +34,13 @@ async def async_handler(job):
     rich_console.info(f"Processing job: {job_id}")
     
     # Extract job input + Handle request
-    response = engine.process_job_input(job['input'])
+    # response = engine.process_job_input(job['input'])
+    if 'openai_input' in  input:
+        job_input = job['input']['openai_input']
+    else:
+        job_input = job['input']
+
+    response = engine.process_job_input(job_input)
     
     rich_console.info(f"Job {job_id}: Processed successfully")
 
@@ -50,7 +55,7 @@ async def async_handler(job):
         rich_console.info(env_var)
     rich_console.info("Job")
     rich_console.info("Job")
-    rich_console.info(f"{str(job)}")
+    rich_console.info(f"Job >> {str(job)}")
     time.sleep(5)
     yield response
 
