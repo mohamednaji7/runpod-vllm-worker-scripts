@@ -3,6 +3,7 @@ import runpod
 from engine_api import OpenaiEngine
 from model_api import MockModel
 import os
+import time
 
 if os.environ.get('SCRIPT_NAME') is not None:
     import logging
@@ -50,6 +51,7 @@ async def async_handler(job):
     rich_console.info("Job")
     rich_console.info("Job")
     rich_console.info(f"{str(job)}")
+    time.sleep(5)
     yield response
 
 
