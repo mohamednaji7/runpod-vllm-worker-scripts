@@ -33,8 +33,6 @@ async def async_handler(job):
     job_id = job.get('id', 'Unknown')
     rich_console.info(f"Processing job: {job_id}")
     
-    job_id = job.get('id')
-    rich_console.info(f"Processing job: {job_id}")
     
     # Extract job input + Handle request
     response = engine.process_job_input(job['input'])

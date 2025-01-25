@@ -30,9 +30,6 @@ def get_max_concurrency(default=300):
 
 async def async_handler(job):
     """Asynchronous job handler with comprehensive logging."""
-    job_id = job.get('id', 'Unknown')
-    rich_console.info(f"Processing job: {job_id}")
-    
     job_id = job.get('id')
     rich_console.info(f"Processing job: {job_id}")
     
@@ -40,6 +37,10 @@ async def async_handler(job):
     response = engine.process_job_input(job['input'])
     
     rich_console.info(f"Job {job_id}: Processed successfully")
+
+    rich_console.debug("Job")
+    rich_console.debug("Job")
+    rich_console.debug(f"{str(job)}")
     yield response
 
 
