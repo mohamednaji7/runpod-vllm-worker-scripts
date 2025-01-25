@@ -38,9 +38,18 @@ async def async_handler(job):
     
     rich_console.info(f"Job {job_id}: Processed successfully")
 
-    rich_console.debug("Job")
-    rich_console.debug("Job")
-    rich_console.debug(f"{str(job)}")
+    # Retrieve environment variables
+    REPO_URL = os.environ.get('REPO_URL')
+    REPO_NAME = os.environ.get('REPO_NAME')
+    SCRIPT_DIR = os.environ.get('SCRIPT_DIR')
+    SCRIPT_NAME = os.environ.get('SCRIPT_NAME')
+    
+    # Validate environment variables
+    for env_var in [REPO_URL, REPO_NAME, SCRIPT_DIR, SCRIPT_NAME]:
+        rich_console.info(env_var)
+    rich_console.info("Job")
+    rich_console.info("Job")
+    rich_console.info(f"{str(job)}")
     yield response
 
 
