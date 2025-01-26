@@ -32,6 +32,8 @@ def handler(job):
                 "total_tokens": 25,
             },
         }
+        return {'output': output}
+
     else:
         # Handle missing input case
         output = {
