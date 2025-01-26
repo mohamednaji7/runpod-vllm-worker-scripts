@@ -38,7 +38,7 @@ def handler(job):
 
     if job['input'].get('openai_route') == '/v1/chat/completions':
         response = chat_completions_handler(job)
-        logging.info(f"{response} >>>>> esponse")
+        logging.info(f"response >>>>> {response}")
         return 
     else:
         raise ValueError("Unsupported openai_route")
