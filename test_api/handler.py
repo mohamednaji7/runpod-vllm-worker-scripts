@@ -34,12 +34,12 @@ def chat_completions_handler(job):
         }
     }
 def handler(job):
-    logging.info("job >>")
-    logging.info("job >>")
     logging.info(f"job >> {str(job)}")
 
     if job['input'].get('openai_route') == '/v1/chat/completions':
-        return chat_completions_handler(job)
+        response = chat_completions_handler(job)
+        logging.info(response)
+        return 
     else:
         raise ValueError("Unsupported openai_route")
 
