@@ -21,7 +21,7 @@ else:
 
 
 
-def try_update_and_run():
+def try_update_and_run(scriptname):
     rich_console.info(f"Running `try_update_and_run`...")
 
     try:
@@ -30,30 +30,32 @@ def try_update_and_run():
         res = subprocess.run(['git', 'pull'], check=True)
         rich_console.info(res)
 
-        rich_console.info(f"Running 'openai_server.py'...")
+        rich_console.info(f"Running `{scriptname}`...")
         # Run the specified script
-        result = subprocess.run(['python3', 'openai_server.py', '8080'], check=True)
+        result = subprocess.run(['python3', scriptname], check=True)
 
         # Log the output
         rich_console.info(result)
     except Exception as e:
         rich_console.error(f"Error occurred: {e}")
 
-def keep_try_update_and_run():
-    try_update_and_run()
+def keep_try_update_and_run(scriptname):
+    try_update_and_run(scriptname)
     while os.getenv('KEEP_TRY') == 'True' or os.getenv('KEEP_RUN') == 'True':
         rich_console.info(f"KEEP_TRY: {os.getenv('KEEP_TRY')}\nKEEP_RUN: {os.getenv('KEEP_RUN')}")
         seconds = int(os.getenv('RETRY_SECONDS', 60))
         rich_console.info(f"Will try again in {seconds} seconds...")
         time.sleep(seconds)
-        try_update_and_run()
+        try_update_and_run(scriptname)
 
 def main():
 
     from install import install_requirements
     install_requirements(rich_console)
+
+    scriptname = 'handler.py'
     rich_console.info(f"Running `keep_try_update_and_run`...")
-    keep_try_update_and_run()
+    keep_try_update_and_run(scriptname)
 
 if __name__ == "__main__":
     main()
