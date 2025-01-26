@@ -1,4 +1,5 @@
 # handler.py
+# test_openai_response
 import runpod
 from engine_api import OpenaiEngine
 from model_api import MockModel
@@ -17,12 +18,6 @@ else:
     from rich_console import Rich_Console
     rich_console = Rich_Console()
 
-
-
-## Initialize the model
-model = MockModel()
-## Initialize the engine
-engine = OpenaiEngine(model)
 
 def get_max_concurrency(default=300):
     """Get maximum concurrency from environment variable."""
