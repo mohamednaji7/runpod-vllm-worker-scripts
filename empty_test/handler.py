@@ -17,4 +17,5 @@ def handler(job):
              "input_to_process": input_to_process,
              "input": job_input}
 
+
 runpod.serverless.start({"handler": handler})
