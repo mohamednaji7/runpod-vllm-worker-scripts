@@ -6,10 +6,6 @@ api_key = os.environ.get("RUNPOD_API_KEY")
 endpoint_id = os.environ.get("ENDPOINT_ID")
 
 
-print(api_key)
-print(endpoint_id)
-
-
 if not api_key or not endpoint_id:
     raise ValueError("Missing environment variables: RUNPOD_API_KEY or ENDPOINT_ID.")
 
