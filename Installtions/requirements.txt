@@ -5,7 +5,5 @@
 # git+https://github.com/runpod/runpod-python.git
 # To learn more, see https://pip.pypa.io/en/stable/reference/requirements-file-format/
 
-requests
-asyncio
-pathlib
 runpod~=1.7.0
+rich
