@@ -1,11 +1,9 @@
-# test copy 2.py
 import os
 import openai
 
 # Fetch environment variables
 api_key = os.environ.get("RUNPOD_API_KEY")
 endpoint_id = os.environ.get("ENDPOINT_ID")
-
 
 if not api_key or not endpoint_id:
     raise ValueError("Missing environment variables: RUNPOD_API_KEY or ENDPOINT_ID.")
@@ -16,7 +14,7 @@ openai.api_base = f"https://api.runpod.ai/v2/{endpoint_id}/openai/v1"
 
 # Make a request to the chat completions endpoint
 response = openai.ChatCompletion.create(
-    model="No names yet...",
+    model="mock-model",
     messages=[{"role": "user", "content": "Why is RunPod the best platform?"}],
     temperature=0,
     max_tokens=100,
