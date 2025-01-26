@@ -1,4 +1,5 @@
 import runpod
+import logging
 
 
 def handler(job):
@@ -13,9 +14,11 @@ def handler(job):
     elif 'prompt' in job_input:
         input_to_process = job_input.get("prompt")
 
-    return  {"input_to_process": input_to_process,
+    output =  {"input_to_process": input_to_process,
              "route": f"Receveid on route {job_input.get('openai_route', 'other than openai_route')}",
              "received_job_input": job['input']}
+    logging.info(output)
+    return output
 
 
 runpod.serverless.start({"handler": handler})
