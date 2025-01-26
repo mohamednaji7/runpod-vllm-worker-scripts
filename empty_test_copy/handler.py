@@ -32,6 +32,7 @@ def handler(job):
                 "total_tokens": 25,
             },
         }
+        logging.info(output)
         return {'output': output}
 
     else:
