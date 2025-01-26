@@ -1,5 +1,6 @@
 import runpod
 import logging
+import time
 
 
 async def handler(job):
@@ -15,9 +16,16 @@ async def handler(job):
         state = {"messages": messages, "openai_route": f"Received on route {route}"}
         logging.info(state)
 
+
+
         # Respond with a mock completion
         output = {
+            'id': job['id'],
+            'object': 'text_completion',
+            'created': int(time.time()),
             "model": "mock-model",  # Include a model name
+            'system_fingerprint': "fp_44709d6fcb",
+
             "choices": [
                 {
                     "message": {
@@ -33,7 +41,8 @@ async def handler(job):
             },
         }
         logging.info(output)
-        return {'output': output}
+        # return {'output': output}
+        return output
 
     else:
         # Handle missing input case
