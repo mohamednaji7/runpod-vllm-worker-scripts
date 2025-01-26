@@ -42,7 +42,7 @@ def handler(job):
     #     return {"output": response}
     # else:
     #     raise ValueError("Unsupported openai_route")
-   return {"output": {"message": "Test response"}}
+   yield {"output": {"message": "Test response"}}
    
 
 runpod.serverless.start({"handler": handler})
