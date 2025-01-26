@@ -13,8 +13,8 @@ def handler(job):
     elif 'prompt' in job_input:
         input_to_process = job_input.get("prompt")
 
-    return  {"route": f"Receveid on route {job_input.get('openai_route', 'other than openai_route')}",
-             "input_to_process": input_to_process,
+    return  {"input_to_process": input_to_process,
+             "route": f"Receveid on route {job_input.get('openai_route', 'other than openai_route')}",
              "input": job_input}
 
 
