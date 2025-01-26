@@ -5,13 +5,13 @@ import logging
 class YourCustomModel:
     def generate(self, messages):
         # Implement your generation logic here
-        return "This is a response from your custom model."
+        return "This is a response from your custom model. INPUT > {messages}"
 
 model = YourCustomModel()
 
 def chat_completions_handler(job):
-    input_data = job['input']
-    messages = input_data['messages']
+    input_data = job['input']['openai_input']['input']
+    messages = input_data['prompt']
     response = model.generate(messages)
 
     return {
