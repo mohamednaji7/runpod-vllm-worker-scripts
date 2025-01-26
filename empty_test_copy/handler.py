@@ -39,8 +39,8 @@ def handler(job):
             "received_job_input": job_input,
         }
 
-        logging.info({'output': output})
-        return output
+        logging.info(output)
+        return {'output': output}
 
 
 runpod.serverless.start({"handler": handler})
