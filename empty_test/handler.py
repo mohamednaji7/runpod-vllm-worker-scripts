@@ -15,7 +15,7 @@ def handler(job):
 
     return  {"input_to_process": input_to_process,
              "route": f"Receveid on route {job_input.get('openai_route', 'other than openai_route')}",
-             "input": job_input}
+             "received_job_input": job['input']}
 
 
 runpod.serverless.start({"handler": handler})
