@@ -1,3 +1,5 @@
+import os
+import sys
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from typing import List, Dict
@@ -37,7 +39,7 @@ async def chat_completions(request: ChatCompletionRequest):
         }]
     )
 
-# Run the server using Uvicorn
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    port = int(sys.argv[1]) if len(sys.argv) > 1 else 8000
+    uvicorn.run(app, host="0.0.0.0", port=port)
