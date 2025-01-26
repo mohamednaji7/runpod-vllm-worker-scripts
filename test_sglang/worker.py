@@ -1,8 +1,6 @@
-import asyncio
 from typing import Dict, Any
-import json
+import asyncio
 
-# Instead of using sglang.backend, we'll create a simple base worker
 class BaseWorker:
     def __init__(self):
         self.model_name = None
@@ -11,35 +9,33 @@ class DummyWorker(BaseWorker):
     def __init__(self):
         super().__init__()
         self.model_name = "dummy-model"
-        
+    
     async def handle_request(self, request_dict: Dict[str, Any]) -> Dict[str, Any]:
         """
         Handle incoming requests
         """
-        prompt = request_dict.get("prompt", "")
-        response = {
-            "text": f"Dummy response to: {prompt}",
-            "status": "success",
-            "model": self.model_name
-        }
-        return response
+        try:
+            prompt = request_dict.get("prompt", "")
+            # Simulate some async work
+            await asyncio.sleep(0.1)
+            
+            response = {
+                "status": "success",
+                "output": f"Dummy response to: {prompt}",
+                "model": self.model_name
+            }
+            return response
+            
+        except Exception as e:
+            return {
+                "status": "error",
+                "error": str(e),
+                "error_type": str(type(e).__name__)
+            }
 
     async def generate(self, prompt: str, **kwargs) -> str:
         """
         Basic generation method
         """
+        await asyncio.sleep(0.1)  # Simulate async work
         return f"Dummy response to: {prompt}"
-
-    async def start(self, host: str, port: int):
-        """
-        Start the worker service
-        """
-        print(f"Starting dummy worker on {host}:{port}")
-        # In a real implementation, you'd set up a server here
-        await asyncio.sleep(0.1)  # Simulate startup
-
-    async def stop(self):
-        """
-        Stop the worker service
-        """
-        print("Stopping dummy worker")
