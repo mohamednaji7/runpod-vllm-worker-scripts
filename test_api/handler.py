@@ -1,26 +1,23 @@
-
-
-
 import runpod
-from openai import OpenAI
 import time
-# Your model implementation here
-class YourModel():
-    def generate(seld, mgs):
-        return "Dummy response!"
-    
-model = YourModel()
+import json
+class YourCustomModel:
+    def generate(self, messages):
+        # Implement your generation logic here
+        return "This is a response from your custom model."
+
+model = YourCustomModel()
 
 def chat_completions_handler(job):
-    messages = job['input']['messages']
-    # Process messages with your model
+    input_data = job['input']
+    messages = input_data['messages']
     response = model.generate(messages)
-    
+
     return {
         "id": f"chatcmpl-{job['id']}",
         "object": "chat.completion",
         "created": int(time.time()),
-        "model": job['input'].get('model', 'your-model-name'),
+        "model": input_data.get('model', 'your-custom-model'),
         "choices": [{
             "index": 0,
             "message": {
@@ -30,32 +27,15 @@ def chat_completions_handler(job):
             "finish_reason": "stop"
         }],
         "usage": {
-            # Implement token counting logic here
+            "prompt_tokens": len(json.dumps(messages)),
+            "completion_tokens": len(response),
+            "total_tokens": len(json.dumps(messages)) + len(response)
         }
     }
-
-def models_handler(job):
-    # Return list of available models
-    return {
-        "data": [
-            {
-                "id": "your-model-name",
-                "object": "model",
-                "created": int(time.time()),
-                "owned_by": "your-organization"
-            }
-        ],
-        "object": "list"
-    }
-
 def handler(job):
-    if job['input']['path'] == '/v1/chat/completions':
+    if job['input'].get('path') == '/v1/chat/completions':
         return chat_completions_handler(job)
-    elif job['input']['path'] == '/v1/models':
-        return models_handler(job)
     else:
         raise ValueError("Unsupported path")
 
 runpod.serverless.start({"handler": handler})
-
-
