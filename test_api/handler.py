@@ -33,7 +33,7 @@ def chat_completions_handler(job):
             "total_tokens": len(json.dumps(messages)) + len(response)
         }
     }
-def handler(job):
+# def handler(job):
     # logging.info(f"job >>>>> {str(job)}")
 
     # if job['input'].get('openai_route') == '/v1/chat/completions':
@@ -42,7 +42,9 @@ def handler(job):
     #     return {"output": response}
     # else:
     #     raise ValueError("Unsupported openai_route")
-   yield {"output": {"message": "Test response"}}
+
+def handler(job):
+   return  {"output": {"message": "Test response"}}
    
 
 runpod.serverless.start({"handler": handler})

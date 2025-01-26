@@ -1,35 +1,30 @@
+import openai
+import asyncio
 
-from openai import OpenAI
-import os
+async def run():
+    runpod_endpoint_id = "nqe3wqry3h7noa"
+    runpod_api_key = "rpa_AOCVOF0Q05X0QVBS4YY096BP674SA3AQXEZCKEHH113m1b"
+    runpod_base_url = f"https://api.runpod.ai/v2/{runpod_endpoint_id}/openai/v1"
 
-base_url=os.environ.get("RUNPOD_BASE_URL")
-api_key=os.environ.get("RUNPOD_API_KEY")
-print(base_url, api_key)
-client = OpenAI(
-    base_url=base_url,
-    api_key=api_key,
-)
+    openai.api_base = runpod_base_url
+    openai.api_key = runpod_api_key
 
-messages = [
-    {
-        "role": "assistant",
-        "content": "Hello, I'm your assistant. How can I help you today?",
+    # Print out parameters to debug
+    print("Parameters being sent to OpenAI:")
+    params = {
+        "model": "NousResearch/Meta-Llama-3-8B-Instruct",
+        "prompt": "Classify this sentiment: vLLM is wonderful!",
+        "max_tokens": 50
     }
-]
+    print(params)
 
-def get_assistant_response(messages):
-    r = client.chat.completions.create(
-        model="your_model_name",
-        messages=[{"role": m["role"], "content": m["content"]} for m in messages],
-        temperature=0.7,
-        top_p=0.8,
-        max_tokens=100,
-    )
-    response = r.choices[0].message.content
-    return response
+    # Sending the request
+    response = await openai.Completion.acreate(**params)
 
-# Example usage
-prompt = "Your prompt here"
-messages.append({"role": "user", "content": prompt})
-response = get_assistant_response(messages)
-print(response)
+    # Print the response
+    print("Response from OpenAI API:")
+    print(response)
+
+
+# Run the async functi
+asyncio.run(run())
