@@ -2,7 +2,7 @@ import runpod
 import logging
 
 
-def handler(job):
+async def handler(job):
     """Handler function that processes jobs."""
     job_input = job.get("input", {})
     output = {}
