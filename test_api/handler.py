@@ -1,13 +1,9 @@
 
 
-## Initialize the model
-model = MockModel()
-## Initialize the engine
-engine = OpenaiEngine(model)
 
 import runpod
 from openai import OpenAI
-
+import time
 # Your model implementation here
 class YourModel():
     def generate(seld, mgs):
