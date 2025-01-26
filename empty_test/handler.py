@@ -6,19 +6,15 @@ def handler(job):
     """ Handler function that will be used to process jobs. """
 
     job_input = job['input']
-    route = 'None'
+
     if 'openai_input' in  job_input:
-        route = job_input.get['openai_route']
-        job_input = job_input['openai_input']
+        output =  {"messages": job_input['openai_input']['messages'],
+                "openai_route": f"Receveid on route {job_input.get['openai_route']}"}
+    else:
+        output =  {"prompt":job_input.get("prompt", "No prompt found")}
 
-    if 'messages' in job_input:
-        input_to_process = job_input.get('messages')
-    elif 'prompt' in job_input:
-        input_to_process = job_input.get("prompt")
+    output["received_job_input"] = job_input
 
-    output =  {"input_to_process": input_to_process,
-             "route": f"Receveid on route {route}",
-             "received_job_input": job['input']}
     logging.info(output)
 
     return output
