@@ -38,10 +38,10 @@ def handler(job):
     logging.info("job >>")
     logging.info(f"job >> {str(job)}")
 
-    if job['input'].get('path') == '/v1/chat/completions':
+    if job['input'].get('openai_route') == '/v1/chat/completions':
         return chat_completions_handler(job)
     else:
-        raise ValueError("Unsupported path")
+        raise ValueError("Unsupported openai_route")
 
 runpod.serverless.start({"handler": handler})
 
