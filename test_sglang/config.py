@@ -1,5 +1,5 @@
 WORKER_CONFIG = {
-    "host": "localhost",
+    "host": "0.0.0.0",  # Changed from localhost for container compatibility
     "port": 8000,
     "model_name": "dummy-model",
     "max_batch_size": 32,
