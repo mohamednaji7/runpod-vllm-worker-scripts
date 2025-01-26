@@ -10,8 +10,8 @@ class YourCustomModel:
 model = YourCustomModel()
 
 def chat_completions_handler(job):
-    input_data = job['input']['openai_input']['input']
-    messages = input_data['prompt']
+    input_data = job['input']['openai_input']
+    messages = input_data['messages']
     response = model.generate(messages)
 
     return {
