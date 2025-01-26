@@ -16,17 +16,20 @@ else:
 
 logging.info("[STARTING] HANDLER.....")
 
-# Get the port from environment variable or default to 8080
-port = os.environ.get('PORT', '8080')
 
-# Start the OpenAI server
-try:
-    subprocess.run(['python3', 'openai_server.py', port], check=True)
-except subprocess.CalledProcessError as e:
-    logging.error(f"Failed to start openai_server.py: {e}")
-
-def handler(job):
+async def handler(job):
     """ Handler function that will be used to process jobs. """
+    
+    # Get the port from environment variable or default to 8080
+    port = os.environ.get('PORT', '8080')
+
+    # Start the OpenAI server
+    try:
+        subprocess.run(['python3', 'openai_server.py', port], check=True)
+    except subprocess.CalledProcessError as e:
+        logging.error(f"Failed to start openai_server.py: {e}")
+
+
     logging.info("[Processing] request...")
 
     job_input = job['input']
