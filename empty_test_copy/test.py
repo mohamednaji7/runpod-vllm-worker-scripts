@@ -2,7 +2,7 @@ import os
 import requests
 
 # Fetch environment variables
-api_key = os.environ.get("RUNPOD_API_KEY")
+api_key = os.environ.get("API_KEY")
 endpoint_id = os.environ.get("ENDPOINT_ID")
 
 
@@ -11,6 +11,7 @@ if not api_key or not endpoint_id:
 
 # Define the API endpoint
 url = f"https://api.runpod.ai/v2/{endpoint_id}/openai/v1/chat/completions"
+url = f"https://api.runpod.ai/v2/{endpoint_id}/openai"
 
 # Prepare the headers and payload
 headers = {
