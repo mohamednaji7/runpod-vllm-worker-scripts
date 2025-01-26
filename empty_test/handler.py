@@ -24,8 +24,8 @@ def handler(job):
         output =  {"prompt":job_input.get("prompt", "No prompt found"),
                    "error": "No openai_input found"}
         output["received_job_input"] = job_input
-        logging.info(output)
     
+    logging.info(output)
     return output
 
 runpod.serverless.start({"handler": handler})
