@@ -41,8 +41,8 @@ async def handler(job):
             },
         }
         logging.info(output)
-        # return {'output': output}
-        return output
+        return {'output': output}
+        # return output
 
     else:
         # Handle missing input case
