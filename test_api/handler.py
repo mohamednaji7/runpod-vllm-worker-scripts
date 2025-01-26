@@ -1,6 +1,7 @@
 import runpod
 import time
 import json
+import logging
 class YourCustomModel:
     def generate(self, messages):
         # Implement your generation logic here
@@ -33,9 +34,12 @@ def chat_completions_handler(job):
         }
     }
 def handler(job):
+    logging.info(job)
+
     if job['input'].get('path') == '/v1/chat/completions':
         return chat_completions_handler(job)
     else:
         raise ValueError("Unsupported path")
 
 runpod.serverless.start({"handler": handler})
+
