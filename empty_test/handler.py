@@ -18,6 +18,7 @@ def handler(job):
              "route": f"Receveid on route {job_input.get('openai_route', 'other than openai_route')}",
              "received_job_input": job['input']}
     logging.info(output)
+    
     return output
 
 
