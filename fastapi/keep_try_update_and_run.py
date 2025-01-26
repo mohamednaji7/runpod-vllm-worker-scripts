@@ -32,7 +32,7 @@ def try_update_and_run():
 
         rich_console.info(f"Running 'openai_server.py'...")
         # Run the specified script
-        result = subprocess.run(['python3', 'openai_server.py', 8080], check=True)
+        result = subprocess.run(['python3', 'openai_server.py', '8080'], check=True)
 
         # Log the output
         rich_console.info(result)
