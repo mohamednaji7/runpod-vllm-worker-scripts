@@ -9,7 +9,7 @@ def handler(job):
 
     if 'openai_input' in  job_input:
         output =  {"messages": job_input['openai_input']['messages'],
-                "openai_route": f"Receveid on route {job_input.get['openai_route']}"}
+                "openai_route": f"Receveid on route {job_input['openai_route']}"}
     else:
         output =  {"prompt":job_input.get("prompt", "No prompt found")}
 
