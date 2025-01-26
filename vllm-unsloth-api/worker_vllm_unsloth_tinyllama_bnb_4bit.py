@@ -1,10 +1,10 @@
 # src/worker_vllm_unsloth_tinyllama_bnb_4bit.py
 
 import runpod
-from unsloth_model import UnslothModel
+from mock_model import MockModel
 
 # Initialize the Unsloth model
-unsloth_model = UnslothModel()
+unsloth_model = MockModel()
 
 async def handler(job):
     """Handle incoming job requests and generate responses using the Unsloth model."""
