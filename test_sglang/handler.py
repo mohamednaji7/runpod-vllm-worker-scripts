@@ -40,6 +40,7 @@ async def async_handler(job):
                     decoded_chunk = chunk.decode('utf-8')
                     yield decoded_chunk        
     else:
+        base_url = f"http://{host}:{port}"
         generate_url = base_url+"/generate"
         headers = {"Content-Type": "application/json"}
         # Directly pass `job_input` to `json`. Can we tell users the possible fields of `job_input`?
