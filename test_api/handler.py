@@ -34,7 +34,9 @@ def chat_completions_handler(job):
         }
     }
 def handler(job):
-    logging.info(job)
+    logging.info("job >>")
+    logging.info("job >>")
+    logging.info(f"job >> {str(job)}")
 
     if job['input'].get('path') == '/v1/chat/completions':
         return chat_completions_handler(job)
