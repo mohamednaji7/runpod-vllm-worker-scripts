@@ -23,7 +23,7 @@ class UnslothModel:
 
             # Model configuration
             model_dir = "unsloth/tinyllama-bnb-4bit"
-            model_dir = "Commercer/Aba-1.0-Large"
+            # model_dir = "Commercer/Aba-1.0-Large"
 
             self.model_id = model_dir
             cache_dir = '/runpod-volume/HF_HOME'
