@@ -24,7 +24,7 @@ class UnslothModel:
             # Model configuration
             model_dir = "unsloth/tinyllama-bnb-4bit"
             self.model_id = model_dir
-            cache_dir = './HF_HOME'
+            cache_dir = '/runpod-volume/HF_HOME'
 
             # Model initialization with detailed logging
             rich_console.info(f"Loading model from {model_dir}")
