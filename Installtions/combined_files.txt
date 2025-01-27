@@ -1,0 +1,530 @@
+===== activate_UnslothEnv_install_req.sh =====
+
+# Exit on error
+set -e
+
+
+# Define variables
+CONDA_INSTALLER="Miniconda3-latest-Linux-x86_64.sh"
+# CONDA_INSTALL_PATH="$HOME/miniconda3"
+CONDA_INSTALL_PATH="$(pwd)/miniconda3"
+ENV_NAME="unsloth_env"
+
+
+
+# Initialize Conda for bash
+echo "Initializing Conda..."
+"$CONDA_INSTALL_PATH/bin/conda" init bash
+
+# Source Conda setup script directly for the current session
+source "$CONDA_INSTALL_PATH/etc/profile.d/conda.sh"
+
+
+# Activate the new environment for the current session
+echo "Activating environment: $ENV_NAME..."
+conda activate "$ENV_NAME"
+
+
+echo ""
+echo "Lets' install requirments."
+pip install -r requirements.txt
+
+echo ""
+echo "Done! You can now use Conda, Unsloth, and your requirments."
+
+echo ""
+echo "source ~/.bashrc"
+source ~/.bashrc
+
+===== download_model.py =====
+import os
+import glob
+from huggingface_hub import snapshot_download
+
+def download(name, revision, type, cache_dir):
+    if type == "model":
+        pattern_sets = [model_pattern + TOKENIZER_PATTERNS[0] for model_pattern in MODEL_PATTERNS]
+    elif type == "tokenizer":
+        pattern_sets = TOKENIZER_PATTERNS
+    else:
+        raise ValueError(f"Invalid type: {type}")
+    try:
+        for pattern_set in pattern_sets:
+            path = snapshot_download(name, revision=revision, cache_dir=cache_dir,
+                                    allow_patterns=pattern_set)
+            for pattern in pattern_set:
+                if glob.glob(os.path.join(path, pattern)):
+                    print(f"Successfully downloaded {pattern} model files.")
+                    return path
+    except ValueError:
+        raise ValueError(f"No patterns matching {pattern_sets} found for download.")
+
+
+
+TOKENIZER_PATTERNS = [["*.json", "tokenizer*"]]
+MODEL_PATTERNS = [["*.safetensors"], ["*.bin"], ["*.pt"]]
+
+if __name__ == "__main__":
+    cache_dir = os.getenv("HF_HOME")
+    model_name, model_revision = os.getenv("MODEL_NAME"), os.getenv("MODEL_REVISION") or None
+    tokenizer_name, tokenizer_revision = os.getenv("TOKENIZER_NAME") or model_name, os.getenv("TOKENIZER_REVISION") or model_revision
+
+
+    model_path = download(model_name, model_revision, "model", cache_dir)
+    tokenizer_path = download(tokenizer_name, tokenizer_revision, "tokenizer", cache_dir)
+===== handler.py =====
+
+
+
+# model_api.py
+import os
+import logging
+# Configure logging to output plain text to stdout
+logging.basicConfig(
+    level=logging.INFO,       # Set the minimum logging level
+    format='[%(levelname)s] %(message)s'  # Text-only format
+)
+rich_console = logging
+
+from unsloth import FastLanguageModel
+
+class UnslothModel:
+    def __init__(self):
+        """Initialize the Unsloth language model with comprehensive logging."""
+        try:
+            rich_console.info("Initializing UnslothModel")
+
+            # Model configuration
+            model_dir = "unsloth/tinyllama-bnb-4bit"
+            self.model_id = model_dir
+            cache_dir = './HF_HOME'
+
+            # Model initialization with detailed logging
+            rich_console.info(f"Loading model from {model_dir}")
+            dtype = None # None for auto detection. Float16 for Tesla T4, V100, Bfloat16 for Ampere+
+            load_in_4bit = True # Use 4bit quantization to reduce memory usage. Can be False.
+            max_seq_length = 1024 # Choose any! We auto support RoPE Scaling internally!
+
+            self.model, self.tokenizer = FastLanguageModel.from_pretrained(
+                model_name=model_dir,
+                max_seq_length=max_seq_length,
+                dtype=dtype,
+                load_in_4bit=load_in_4bit,
+                cache_dir=cache_dir,
+            )
+
+            # Prepare model for inference
+            print("\n", "_"*50, "\n")
+            print("FastLanguageModel.for_inference")
+            FastLanguageModel.for_inference(self.model)
+            rich_console.info("Model initialized successfully")
+
+            self.processed_prompt_tokens = -1
+            self.processed_completion_tokens = -1
+
+        except Exception as e:
+            rich_console.error(f"Model initialization failed: {e}", exc_info=True)
+            raise
+
+    def generate_response(self, prompt, max_new_tokens=128):
+        """Generate a response with comprehensive logging."""
+        try:
+            rich_console.info(f"Generating response. Prompt length: {len(prompt)}")
+            rich_console.debug(f"Prompt preview: {prompt[:100]}...")
+
+            # Prepare input
+            inputs = self.tokenizer([prompt], return_tensors="pt").to("cuda")
+
+            # Generate response
+            outputs = self.model.generate(**inputs, max_new_tokens=max_new_tokens, use_cache=True)
+            response = self.tokenizer.batch_decode(outputs)[0]
+
+            rich_console.info(f"Response generated. Length: {len(response)}")
+            rich_console.debug(f"Response preview: {response[:100]}...")
+
+            # Calculate token usage
+            self.processed_prompt_tokens  = len(prompt.split())
+            self.processed_completion_tokens = len(response.split())
+            return response
+
+        except Exception as e:
+            rich_console.error(f"Response generation failed: {e}", exc_info=True)
+            raise
+
+UnslothModel()
+===== setup_python.sh =====
+
+# Exit on error
+set -e
+
+apt-get update
+apt-get install wget
+
+
+# Define variables
+CONDA_INSTALLER="Miniconda3-latest-Linux-x86_64.sh"
+# CONDA_INSTALL_PATH="$HOME/miniconda3"
+CONDA_INSTALL_PATH="$(pwd)/miniconda3"
+ENV_NAME="unsloth_env"
+
+# Download Miniconda installer
+if [ ! -f "$CONDA_INSTALLER" ]; then
+    echo "Downloading Miniconda installer..."
+    wget -q "https://repo.anaconda.com/miniconda/$CONDA_INSTALLER"
+else
+    echo "Miniconda installer already exists. Skipping download."
+fi
+
+# Install Miniconda silently
+if [ ! -d "$CONDA_INSTALL_PATH" ]; then
+    echo "Installing Miniconda..."
+    bash "$CONDA_INSTALLER" -b -p "$CONDA_INSTALL_PATH"
+else
+    echo "Miniconda is already installed. Skipping installation."
+fi
+
+# Initialize Conda for bash
+echo "Initializing Conda..."
+"$CONDA_INSTALL_PATH/bin/conda" init bash
+
+# Source Conda setup script directly for the current session
+source "$CONDA_INSTALL_PATH/etc/profile.d/conda.sh"
+
+# Create an empty Conda environment
+echo "Creating an empty Conda environment: $ENV_NAME..."
+"$CONDA_INSTALL_PATH/bin/conda" create --name "$ENV_NAME" python=3.10 -y
+# "$CONDA_INSTALL_PATH/bin/conda" create --name "$ENV_NAME" --no-default-packages -y
+
+# Activate the new environment for the current session
+echo "Activating environment: $ENV_NAME..."
+conda activate "$ENV_NAME"
+
+# Verify Conda environment
+echo "Environment created and activated successfully:"
+conda info --envs
+
+echo "Done! You can now use Conda and your environment."
+
+
+echo "Lets' install requirments."
+pip install -r requirements.txt
+
+===== activate_UnslothEnv_run_handler.sh =====
+
+# Exit on error
+set -e
+
+
+# Define variables
+CONDA_INSTALLER="Miniconda3-latest-Linux-x86_64.sh"
+# CONDA_INSTALL_PATH="$HOME/miniconda3"
+CONDA_INSTALL_PATH="$(pwd)/miniconda3"
+ENV_NAME="unsloth_env"
+
+
+
+# Initialize Conda for bash
+echo "Initializing Conda..."
+"$CONDA_INSTALL_PATH/bin/conda" init bash
+
+# Source Conda setup script directly for the current session
+source "$CONDA_INSTALL_PATH/etc/profile.d/conda.sh"
+
+
+# Activate the new environment for the current session
+echo "Activating environment: $ENV_NAME..."
+conda activate "$ENV_NAME"
+
+
+echo ""
+echo "running  handler.py..."
+echo ""
+python3 handler.py
+
+===== handler-Copy1.py =====
+try:
+    from unsloth import FastLanguageModel
+    print("Unsloth is on your machine let's boost it")
+except Exception as e:
+    print(e)
+    print("You do not have Unsloth yet")
+
+
+# model_api.py
+import os
+import logging
+# Configure logging to output plain text to stdout
+logging.basicConfig(
+    level=logging.DEBUG,       # Set the minimum logging level
+    format='[%(levelname)s] %(message)s'  # Text-only format
+)
+rich_console = logging
+
+from unsloth import FastLanguageModel
+
+class UnslothModel:
+    def __init__(self):
+        """Initialize the Unsloth language model with comprehensive logging."""
+        try:
+            rich_console.info("Initializing UnslothModel")
+
+            # Model configuration
+            model_dir = "unsloth/tinyllama-bnb-4bit"
+            self.model_id = model_dir
+            cache_dir = './HF_HOME'
+
+            # Model initialization with detailed logging
+            rich_console.info(f"Loading model from {model_dir}")
+            dtype = None # None for auto detection. Float16 for Tesla T4, V100, Bfloat16 for Ampere+
+            load_in_4bit = True # Use 4bit quantization to reduce memory usage. Can be False.
+            max_seq_length = 2048 # Choose any! We auto support RoPE Scaling internally!
+
+            self.model, self.tokenizer = FastLanguageModel.from_pretrained(
+                model_name=model_dir,
+                max_seq_length=max_seq_length,
+                dtype=dtype,
+                load_in_4bit=load_in_4bit,
+                cache_dir=cache_dir,
+            )
+
+            # Prepare model for inference
+            FastLanguageModel.for_inference(self.model)
+            rich_console.info("Model initialized successfully")
+
+            self.processed_prompt_tokens = -1
+            self.processed_completion_tokens = -1
+
+        except Exception as e:
+            rich_console.error(f"Model initialization failed: {e}", exc_info=True)
+            raise
+
+    def generate_response(self, prompt, max_new_tokens=128):
+        """Generate a response with comprehensive logging."""
+        try:
+            rich_console.info(f"Generating response. Prompt length: {len(prompt)}")
+            rich_console.debug(f"Prompt preview: {prompt[:100]}...")
+
+            # Prepare input
+            inputs = self.tokenizer([prompt], return_tensors="pt").to("cuda")
+
+            # Generate response
+            outputs = self.model.generate(**inputs, max_new_tokens=max_new_tokens, use_cache=True)
+            response = self.tokenizer.batch_decode(outputs)[0]
+
+            rich_console.info(f"Response generated. Length: {len(response)}")
+            rich_console.debug(f"Response preview: {response[:100]}...")
+
+            # Calculate token usage
+            self.processed_prompt_tokens  = len(prompt.split())
+            self.processed_completion_tokens = len(response.split())
+            return response
+
+        except Exception as e:
+            rich_console.error(f"Response generation failed: {e}", exc_info=True)
+            raise
+
+UnslothModel()===== requirements.txt =====
+# Required Python packages get listed here, one per line.
+# Reccomended to lock the version number to avoid unexpected changes.
+
+# You can also install packages from a git repository, e.g.:
+# git+https://github.com/runpod/runpod-python.git
+# To learn more, see https://pip.pypa.io/en/stable/reference/requirements-file-format/
+
+runpod~=1.7.0
+rich
+numpy
+===== activate_UnslothEnv_unlsoth.sh =====
+
+# Exit on error
+set -e
+
+apt-get update
+apt-get install wget
+
+
+# Define variables
+CONDA_INSTALL_PATH="$(pwd)/miniconda3"
+ENV_NAME="unsloth_env"
+
+
+
+
+# Initialize Conda for bash
+echo "Initializing Conda..."
+"$CONDA_INSTALL_PATH/bin/conda" init bash
+
+# Source Conda setup script directly for the current session
+source "$CONDA_INSTALL_PATH/etc/profile.d/conda.sh"
+
+# Activate the new environment for the current session
+echo "Activating environment: $ENV_NAME..."
+conda activate "$ENV_NAME"
+
+# Verify Conda environment
+echo "Environment created and activated successfully:"
+conda info --envs
+
+echo "Done! You can now use Conda and your environment."
+
+# Unsloth
+echo "Let's get Unsloth..."
+
+conda install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia -y
+conda install xformers -c xformers -y
+
+pip install bitsandbytes
+pip install "unsloth[conda] @ git+https://github.com/unslothai/unsloth.git"
+
+echo ""
+echo "Done! You can now use Conda and Unsloth."
+
+echo ""
+echo "Lets' install requirments."
+pip install -r requirements.txt
+
+echo ""
+echo "Done! You can now use Conda, Unsloth, and your requirments."
+
+echo ""
+echo "source ~/.bashrc"
+source ~/.bashrc
+===== handler-copy.py =====
+try:
+    from unsloth import FastLanguageModel
+    print("Unsloth is on your machine let's boost it")
+except Exception as e:
+    print(e)
+    print("You do not have Unsloth yet")
+
+
+# model_api.py
+import os
+import logging
+# Configure logging to output plain text to stdout
+logging.basicConfig(
+    level=logging.INFO,       # Set the minimum logging level
+    format='[%(levelname)s] %(message)s'  # Text-only format
+)
+rich_console = logging
+
+from unsloth import FastLanguageModel
+
+class UnslothModel:
+    def __init__(self):
+        """Initialize the Unsloth language model with comprehensive logging."""
+        try:
+            rich_console.info("Initializing UnslothModel")
+
+            # Model configuration
+            model_dir = "unsloth/tinyllama-bnb-4bit"
+            self.model_id = model_dir
+            cache_dir = './HF_HOME'
+
+            # Model initialization with detailed logging
+            rich_console.info(f"Loading model from {model_dir}")
+            dtype = None # None for auto detection. Float16 for Tesla T4, V100, Bfloat16 for Ampere+
+            load_in_4bit = True # Use 4bit quantization to reduce memory usage. Can be False.
+            max_seq_length = 1024 # Choose any! We auto support RoPE Scaling internally!
+
+            self.model, self.tokenizer = FastLanguageModel.from_pretrained(
+                model_name=model_dir,
+                max_seq_length=max_seq_length,
+                dtype=dtype,
+                load_in_4bit=load_in_4bit,
+                cache_dir=cache_dir,
+            )
+
+            # Prepare model for inference
+            FastLanguageModel.for_inference(self.model)
+            rich_console.info("Model initialized successfully")
+
+            self.processed_prompt_tokens = -1
+            self.processed_completion_tokens = -1
+
+        except Exception as e:
+            rich_console.error(f"Model initialization failed: {e}", exc_info=True)
+            raise
+
+    def generate_response(self, prompt, max_new_tokens=128):
+        """Generate a response with comprehensive logging."""
+        try:
+            rich_console.info(f"Generating response. Prompt length: {len(prompt)}")
+            rich_console.debug(f"Prompt preview: {prompt[:100]}...")
+
+            # Prepare input
+            inputs = self.tokenizer([prompt], return_tensors="pt").to("cuda")
+
+            # Generate response
+            outputs = self.model.generate(**inputs, max_new_tokens=max_new_tokens, use_cache=True)
+            response = self.tokenizer.batch_decode(outputs)[0]
+
+            rich_console.info(f"Response generated. Length: {len(response)}")
+            rich_console.debug(f"Response preview: {response[:100]}...")
+
+            # Calculate token usage
+            self.processed_prompt_tokens  = len(prompt.split())
+            self.processed_completion_tokens = len(response.split())
+            return response
+
+        except Exception as e:
+            rich_console.error(f"Response generation failed: {e}", exc_info=True)
+            raise
+
+UnslothModel()
+===== setup_add_np.sh =====
+
+# Exit on error
+set -e
+
+apt-get update
+apt-get install wget
+
+
+# Define variables
+CONDA_INSTALLER="Miniconda3-latest-Linux-x86_64.sh"
+# CONDA_INSTALL_PATH="$HOME/miniconda3"
+CONDA_INSTALL_PATH="$(pwd)/miniconda3"
+ENV_NAME="unsloth_env"
+
+# Download Miniconda installer
+if [ ! -f "$CONDA_INSTALLER" ]; then
+    echo "Downloading Miniconda installer..."
+    wget -q "https://repo.anaconda.com/miniconda/$CONDA_INSTALLER"
+else
+    echo "Miniconda installer already exists. Skipping download."
+fi
+
+# Install Miniconda silently
+if [ ! -d "$CONDA_INSTALL_PATH" ]; then
+    echo "Installing Miniconda..."
+    bash "$CONDA_INSTALLER" -b -p "$CONDA_INSTALL_PATH"
+else
+    echo "Miniconda is already installed. Skipping installation."
+fi
+
+# Initialize Conda for bash
+echo "Initializing Conda..."
+"$CONDA_INSTALL_PATH/bin/conda" init bash
+
+# Source Conda setup script directly for the current session
+source "$CONDA_INSTALL_PATH/etc/profile.d/conda.sh"
+
+# Create an empty Conda environment
+echo "Creating an empty Conda environment: $ENV_NAME..."
+"$CONDA_INSTALL_PATH/bin/conda" create --name "$ENV_NAME" python=3.10 -y
+# "$CONDA_INSTALL_PATH/bin/conda" create --name "$ENV_NAME" --no-default-packages -y
+
+# Activate the new environment for the current session
+echo "Activating environment: $ENV_NAME..."
+conda activate "$ENV_NAME"
+
+# Verify Conda environment
+echo "Environment created and activated successfully:"
+conda info --envs
+
+echo "Done! You can now use Conda and your environment."
+
+
+echo "Lets' install requirments."
+pip install -r requirements.txt

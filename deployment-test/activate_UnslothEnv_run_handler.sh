@@ -6,14 +6,13 @@ set -e
 
 
 # Define variables
-CONDA_INSTALLER="Miniconda3-latest-Linux-x86_64.sh"
 CONDA_INSTALL_PATH="/runpod-volume/miniconda3"
 ENV_NAME="unsloth_env"
 
-# Set environment variables for paths
-export PATH="/runpod-volume/miniconda3/bin:$PATH"
-export CONDA_ENVS_PATH="/runpod-volume/miniconda3/envs"
-export PYTHONPATH="/runpod-volume"
+# # Set environment variables for paths
+# export PATH="/runpod-volume/miniconda3/bin:$PATH"
+# export CONDA_ENVS_PATH="/runpod-volume/miniconda3/envs"
+# export PYTHONPATH="/runpod-volume"
 
 
 
@@ -37,7 +36,7 @@ conda activate "$ENV_NAME"
 
 echo "Python executable: $(which python)"
 echo "Python version: $(python --version)"
-echo "PYTHONPATH: $PYTHONPATH"
+# echo "PYTHONPATH: $PYTHONPATH"
 pip list | grep unsloth || echo "WARNING: unsloth is not installed in this environment."
 
 echo ""
