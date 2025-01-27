@@ -32,14 +32,16 @@ class UnslothModel:
             rich_console.info(f"Loading model from {model_dir}")
             dtype = None # None for auto detection. Float16 for Tesla T4, V100, Bfloat16 for Ampere+
             load_in_4bit = True # Use 4bit quantization to reduce memory usage. Can be False.
-            max_seq_length = 1024 # Choose any! We auto support RoPE Scaling internally!
+            # max_seq_length = 2048 # Choose any! We auto support RoPE Scaling internally!
+            self.max_seq_length = 2**12 
+            self.max_new_tokens = 2**7
 
             hf_token = os.environ.get('HF_TOKEN')
             hf_token_msg = f"using token: {hf_token[:5]}...{hf_token[-5:]}" if hf_token else 'No token found'
             rich_console.info(hf_token_msg)
             self.model, self.tokenizer = FastLanguageModel.from_pretrained(
                 model_name=model_dir,
-                max_seq_length=max_seq_length,
+                max_seq_length=self.max_seq_length,
                 dtype=dtype,
                 load_in_4bit=load_in_4bit,
                 cache_dir=cache_dir,
@@ -59,7 +61,7 @@ class UnslothModel:
             rich_console.error(f"Model initialization failed: {e}", exc_info=True)
             raise
 
-    def generate_response(self, prompt, max_new_tokens=128):
+    def generate_response(self, prompt):
         """Generate a response with comprehensive logging."""
         try:
             rich_console.info(f"Generating response. Prompt length: {len(prompt)}")
@@ -69,7 +71,7 @@ class UnslothModel:
             inputs = self.tokenizer([prompt], return_tensors="pt").to("cuda")
 
             # Generate response
-            outputs = self.model.generate(**inputs, max_new_tokens=max_new_tokens, use_cache=True)
+            outputs = self.model.generate(**inputs, max_new_tokens=self.max_new_tokens, use_cache=True)
             response = self.tokenizer.batch_decode(outputs)[0]
             
             # Remove the prompt from the response

@@ -16,6 +16,7 @@ import runpod
 from model_wraper import UnslothModel
 
 model = UnslothModel()
+
 def handler(job):
     """ Handler function that will be used to process jobs. """
     logging.info("[Processing] request...")
@@ -25,6 +26,7 @@ def handler(job):
     prompt = job_input.get('prompt', False)
     if prompt != False:
         # [{"role": 'None', 'content': prompt}]
+        model.max_new_tokens = job_input.get('max_new_tokens', model.max_new_tokens)
         output = model.generate_response(prompt)
     else:
         output = f"echo: No prompt Found!"
