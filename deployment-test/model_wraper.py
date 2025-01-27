@@ -22,8 +22,8 @@ class UnslothModel:
             rich_console.info("Initializing UnslothModel")
 
             # Model configuration
-            # model_dir = "unsloth/tinyllama-bnb-4bit"
-            model_dir = "Commercer/Aba-1.0-Large"
+            model_dir = "unsloth/tinyllama-bnb-4bit"
+            # model_dir = "Commercer/Aba-1.0-Large"
 
             self.model_id = model_dir
             cache_dir = '/runpod-volume/HF_HOME'
@@ -67,7 +67,15 @@ class UnslothModel:
             # Generate response
             outputs = self.model.generate(**inputs, max_new_tokens=max_new_tokens, use_cache=True)
             response = self.tokenizer.batch_decode(outputs)[0]
+            
+            # Remove the prompt from the response
+            response = response.replace(prompt, "")
 
+            # Check and remove the BOS token if it exists
+            bos_token = self.tokenizer.bos_token
+            if bos_token and response.startswith(bos_token):
+                response = response[len(bos_token):]
+                
             rich_console.info(f"Response generated. Length: {len(response)}")
             rich_console.debug(f"Response preview: {response[:100]}...")
 
