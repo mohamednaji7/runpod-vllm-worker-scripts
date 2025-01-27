@@ -1,17 +1,11 @@
-# model_api.py
+# model_warper.py
 import os
-if os.environ.get('SCRIPT_NAME') is not None:
-    import logging
-    # Configure logging to output plain text to stdout
-    logging.basicConfig(
-        level=logging.DEBUG,       # Set the minimum logging level
-        format='[%(levelname)s] %(message)s'  # Text-only format
-    )
-    rich_console = logging
-
-else:
-    from rich_console import Rich_Console
-    rich_console = Rich_Console()
+import logging
+logging.basicConfig(
+    level=logging.INFO,       # Set the minimum logging level
+    format='[%(levelname)s] %(message)s'  # Text-only format
+)
+rich_console = logging
 
 from unsloth import FastLanguageModel
 
