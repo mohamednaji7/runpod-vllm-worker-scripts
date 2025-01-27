@@ -34,13 +34,16 @@ class UnslothModel:
             load_in_4bit = True # Use 4bit quantization to reduce memory usage. Can be False.
             max_seq_length = 1024 # Choose any! We auto support RoPE Scaling internally!
 
+            hf_token = os.environ.get('HF_TOKEN')
+            hf_token_msg = f"using token: {hf_token[:5]}...{hf_token[-5:]}" if hf_token else 'No token found'
+            rich_console.info(hf_token_msg)
             self.model, self.tokenizer = FastLanguageModel.from_pretrained(
                 model_name=model_dir,
                 max_seq_length=max_seq_length,
                 dtype=dtype,
                 load_in_4bit=load_in_4bit,
                 cache_dir=cache_dir,
-                hf_token = os.environ.get('HF_TOKEN')
+                hf_token = hf_token
             )
             rich_console.info("Model initialized successfully")
 
