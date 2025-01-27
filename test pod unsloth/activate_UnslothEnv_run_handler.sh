@@ -1,3 +1,4 @@
+#activate_UnslothEnv_run_handler.sh
 
 # Exit on error
 set -e
@@ -6,8 +7,7 @@ set -e
 # Define variables
 CONDA_INSTALLER="Miniconda3-latest-Linux-x86_64.sh"
 # CONDA_INSTALL_PATH="$HOME/miniconda3"
-# CONDA_INSTALL_PATH="$(pwd)/miniconda3"
-CONDA_INSTALL_PATH="/runpod-volume/miniconda3"
+CONDA_INSTALL_PATH="$(pwd)/miniconda3"
 ENV_NAME="unsloth_env"
 
 
@@ -26,7 +26,7 @@ conda activate "$ENV_NAME"
 
 
 echo ""
-echo "running `python3 handler.py`..."
+echo "running `python3 unsloth_model.py`..."
 echo ""
-python3 handler.py
+python3 unsloth_model.py
 

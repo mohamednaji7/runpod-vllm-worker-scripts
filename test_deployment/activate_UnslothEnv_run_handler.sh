@@ -1,3 +1,4 @@
+#activate_UnslothEnv_run_handler.sh
 
 # Exit on error
 set -e

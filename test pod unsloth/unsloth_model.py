@@ -1,26 +1,24 @@
-# engine.py
-from unsloth import FastLanguageModel
+
+
+
+# handler.py
 import os
-if os.environ.get('SCRIPT_NAME') is not None:
-    import logging
-    # Configure logging to output plain text to stdout
-    logging.basicConfig(
-        level=logging.DEBUG,       # Set the minimum logging level
-        format='[%(levelname)s] %(message)s'  # Text-only format
-    )
-    rich_console = logging
+import logging
+# Configure logging to output plain text to stdout
+logging.basicConfig(
+    level=logging.INFO,       # Set the minimum logging level
+    format='[%(levelname)s] %(message)s'  # Text-only format
+)
+rich_console = logging
 
-else:
-    from rich_console import Rich_Console
-    rich_console = Rich_Console()
-
+from unsloth import FastLanguageModel
 
 class UnslothModel:
     def __init__(self):
         """Initialize the Unsloth language model with comprehensive logging."""
         try:
             rich_console.info("Initializing UnslothModel")
-            
+
             # Model configuration
             model_dir = "unsloth/tinyllama-bnb-4bit"
             self.model_id = model_dir
@@ -30,7 +28,7 @@ class UnslothModel:
             rich_console.info(f"Loading model from {model_dir}")
             dtype = None # None for auto detection. Float16 for Tesla T4, V100, Bfloat16 for Ampere+
             load_in_4bit = True # Use 4bit quantization to reduce memory usage. Can be False.
-            max_seq_length = 2048 # Choose any! We auto support RoPE Scaling internally!
+            max_seq_length = 1024 # Choose any! We auto support RoPE Scaling internally!
 
             self.model, self.tokenizer = FastLanguageModel.from_pretrained(
                 model_name=model_dir,
@@ -39,14 +37,16 @@ class UnslothModel:
                 load_in_4bit=load_in_4bit,
                 cache_dir=cache_dir,
             )
-            
+
             # Prepare model for inference
+            print("\n", "_"*50, "\n")
+            print("FastLanguageModel.for_inference")
             FastLanguageModel.for_inference(self.model)
             rich_console.info("Model initialized successfully")
 
             self.processed_prompt_tokens = -1
             self.processed_completion_tokens = -1
-        
+
         except Exception as e:
             rich_console.error(f"Model initialization failed: {e}", exc_info=True)
             raise
@@ -59,7 +59,7 @@ class UnslothModel:
 
             # Prepare input
             inputs = self.tokenizer([prompt], return_tensors="pt").to("cuda")
-            
+
             # Generate response
             outputs = self.model.generate(**inputs, max_new_tokens=max_new_tokens, use_cache=True)
             response = self.tokenizer.batch_decode(outputs)[0]
@@ -71,8 +71,10 @@ class UnslothModel:
             self.processed_prompt_tokens  = len(prompt.split())
             self.processed_completion_tokens = len(response.split())
             return response
-        
+
         except Exception as e:
             rich_console.error(f"Response generation failed: {e}", exc_info=True)
             raise
 
+if __name__ == "__main__":
+    UnslothModel()

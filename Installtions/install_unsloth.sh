@@ -6,10 +6,10 @@ apt-get update
 apt-get install wget
 
 
-
 # Define variables
 CONDA_INSTALLER="Miniconda3-latest-Linux-x86_64.sh"
-CONDA_INSTALL_PATH="$HOME/miniconda3"
+# CONDA_INSTALL_PATH="$HOME/miniconda3"
+CONDA_INSTALL_PATH="$(pwd)/miniconda3"
 ENV_NAME="unsloth_env"
 
 # Download Miniconda installer
@@ -36,7 +36,7 @@ echo "Initializing Conda..."
 source "$CONDA_INSTALL_PATH/etc/profile.d/conda.sh"
 
 # Create an empty Conda environment
-echo "Creating an empty Conda environment: $ENV_NAME..."
+echo "Creating an python-3.10 Conda environment: $ENV_NAME..."
 "$CONDA_INSTALL_PATH/bin/conda" create --name "$ENV_NAME" python=3.10 -y
 # "$CONDA_INSTALL_PATH/bin/conda" create --name "$ENV_NAME" --no-default-packages -y
 
