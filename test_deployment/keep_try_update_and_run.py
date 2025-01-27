@@ -55,7 +55,8 @@ def keep_try_update_and_run(scriptname):
 
 def main():
 
-    scriptname = 'activate_UnslothEnv_run_handler_echo.sh'
+    # scriptname = 'activate_UnslothEnv_run_handler_echo.sh'
+    scriptname = 'activate_UnslothEnv_run_handler.sh'
     rich_console.info(f"Running `keep_try_update_and_run`...")
     keep_try_update_and_run(scriptname)
 
