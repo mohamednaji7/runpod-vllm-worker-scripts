@@ -40,6 +40,7 @@ class UnslothModel:
                 dtype=dtype,
                 load_in_4bit=load_in_4bit,
                 cache_dir=cache_dir,
+                hf_token = os.environ.get('HF_TOKEN')
             )
             rich_console.info("Model initialized successfully")
 
