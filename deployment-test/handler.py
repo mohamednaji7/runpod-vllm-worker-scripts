@@ -2,7 +2,7 @@ import os
 if os.environ.get('SCRIPT_NAME') is not None:
     import logging
     logging.basicConfig(
-        level=logging.DEBUG,       # Set the minimum logging level
+        level=logging.INFO,       # Set the minimum logging level
         format='[%(levelname)s] %(message)s'  # Text-only format
     )
     rich_console = logging

@@ -22,7 +22,9 @@ class UnslothModel:
             rich_console.info("Initializing UnslothModel")
 
             # Model configuration
-            model_dir = "unsloth/tinyllama-bnb-4bit"
+            # model_dir = "unsloth/tinyllama-bnb-4bit"
+            model_dir = "Commercer/Aba-1.0-Large"
+
             self.model_id = model_dir
             cache_dir = '/runpod-volume/HF_HOME'
 
@@ -43,9 +45,9 @@ class UnslothModel:
 
 
             # Prepare model for inference
-            rich_console.info("\n", "_"*50, "\n")
-            rich_console.info("FastLanguageModel.for_inference")
             FastLanguageModel.for_inference(self.model)
+            info = "\n"+ "_"*70 + "\n" + "FastLanguageModel.for_inference"
+            rich_console.info(info)
             self.processed_prompt_tokens = -1
             self.processed_completion_tokens = -1
 
