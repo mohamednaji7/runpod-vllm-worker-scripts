@@ -6,6 +6,7 @@ apt-get update
 apt-get install wget
 
 
+
 # Define variables
 CONDA_INSTALLER="Miniconda3-latest-Linux-x86_64.sh"
 CONDA_INSTALL_PATH="$HOME/miniconda3"
