@@ -13,7 +13,7 @@ logging.info("[STARTING] HANDLER.....")
 
 
 import runpod
-# import numpy as np # for testing , nothing more
+import numpy as np # for testing , nothing more
 
 def handler(job):
     """ Handler function that will be used to process jobs. """
