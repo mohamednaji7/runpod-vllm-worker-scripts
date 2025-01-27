@@ -77,6 +77,3 @@ class UnslothModel:
         except Exception as e:
             rich_console.error(f"Response generation failed: {e}", exc_info=True)
             raise
-
-if __name__ == "__main__":
-    UnslothModel()
